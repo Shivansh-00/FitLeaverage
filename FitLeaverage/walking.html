@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walking Activity</title>
+    <style>
+        body {
+            background-color: #b1aeae;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .input-section {
+            margin: 20px 0;
+        }
+
+        .input-section input {
+            padding: 10px;
+            width: 100%;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .input-section button {
+            padding: 10px;
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            display: none;
+        }
+
+        canvas {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .calorie-result {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .dark-mode-toggle {
+            float: right;
+            margin-top: -40px;
+            margin-right: 10px;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .dark-mode .dark-mode-toggle {
+            background-color: #fff;
+            color: #333;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link button {
+            padding: 10px;
+            width: auto;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Walking Activity</h1>
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+
+        <div class="input-section">
+            <input type="number" id="walking-distance" placeholder="Enter distance (km)">
+            <input type="number" id="walking-time" placeholder="Enter time (minutes)">
+            <button onclick="logWalkingActivity()">Log Walking Activity</button>
+        </div>
+
+        <div class="input-section">
+            <h2>Calculate Calories Burned</h2>
+            <input type="number" id="walking-weight" placeholder="Enter your weight (kg)">
+            <select id="walking-intensity">
+                <option value="brisk">Brisk Walk</option>
+                <option value="leisurely">Leisurely Walk</option>
+            </select>
+            <button onclick="calculateCalories()">Calculate Calories</button>
+            <div class="calorie-result" id="calorie-result"></div>
+        </div>
+
+        <div class="chart-container" id="chart-section">
+            <canvas id="walkingChart"></canvas>
+        </div>
+
+        <div class="back-link">
+            <a href="index.html">
+                <button>Back to Home</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let walkingData = JSON.parse(localStorage.getItem('walkingData')) || [];
+        let darkMode = false;
+        let chartInstance = null;
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode', darkMode);
+        }
+
+        // Log walking activity
+        function logWalkingActivity() {
+            const distance = parseFloat(document.getElementById('walking-distance').value);
+            const time = parseFloat(document.getElementById('walking-time').value);
+
+            if (!distance || !time) {
+                alert('Please enter both distance and time.');
+                return;
+            }
+
+            const currentDate = new Date().toLocaleDateString();
+            walkingData.push({ date: currentDate, distance, time });
+            localStorage.setItem('walkingData', JSON.stringify(walkingData));
+
+            document.getElementById('walking-distance').value = '';
+            document.getElementById('walking-time').value = '';
+
+            renderChart();
+        }
+
+        // Calculate calories burned
+        function calculateCalories() {
+            const time = parseFloat(document.getElementById('walking-time').value);
+            const weight = parseFloat(document.getElementById('walking-weight').value);
+            const intensity = document.getElementById('walking-intensity').value;
+
+            if (!time || !weight) {
+                alert('Please enter valid time and weight.');
+                return;
+            }
+
+            let caloriesBurned;
+            if (intensity === 'brisk') {
+                caloriesBurned = (weight * 0.035 + (time / 60) * 0.029 * weight) * time;
+            } else {
+                caloriesBurned = (weight * 0.03 + (time / 60) * 0.025 * weight) * time;
+            }
+
+            document.getElementById('calorie-result').textContent = `You burned approximately ${caloriesBurned.toFixed(2)} calories.`;
+        }
+
+        // Render chart
+        function renderChart() {
+            const dates = walkingData.map(entry => entry.date);
+            const distances = walkingData.map(entry => entry.distance);
+            const times = walkingData.map(entry => entry.time);
+
+            document.getElementById('chart-section').style.display = 'block';
+
+            const ctx = document.getElementById('walkingChart').getContext('2d');
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dates,
+                    datasets: [
+                        {
+                            label: 'Distance (km)',
+                            data: distances,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Time (minutes)',
+                            data: times,
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        window.onload = () => {
+            if (walkingData.length > 0) {
+                renderChart();
+            }
+        };
+    </script>
+</body>
+
+</html>
