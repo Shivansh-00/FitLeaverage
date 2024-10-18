@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Running Activity</title>
+    <style>
+        body {
+            background-image: url("running.jpeg");
+            background-size: cover;
+        }
+
+        .main-content {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .activity-section {
+            margin: 20px 0;
+        }
+
+        .chart-container {
+            margin: 20px 0;
+            width: 100%;
+            max-width: 600px;
+            display: none;
+        }
+
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+
+        .dark-mode .dark-mode-toggle {
+            background-color: #fff;
+            color: #333;
+        }
+
+        canvas {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let darkMode = false;
+        let chartInstance = null;
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            document.body.classList.toggle("dark-mode", darkMode);
+        }
+
+        // Log Running Activity and store it
+        function logRunningActivity() {
+            const distance = parseFloat(document.getElementById("running-distance").value);
+            const time = parseFloat(document.getElementById("running-time").value);
+            const date = new Date().toLocaleDateString();
+
+            if (isNaN(distance) || isNaN(time)) {
+                alert("Please enter valid numbers for both distance and time!");
+                return;
+            }
+
+            const runningData = JSON.parse(localStorage.getItem("runningData")) || [];
+            runningData.push({ date, distance, time });
+            localStorage.setItem("runningData", JSON.stringify(runningData));
+
+            alert(`Running Activity Logged!\nDistance: ${distance} km\nTime: ${time} min`);
+
+            // Show chart and update it after logging activity
+            document.getElementById('chart-container').style.display = 'block';
+            renderChart();
+        }
+
+        // Render the bar chart with data from localStorage
+        function renderChart() {
+            const runningData = JSON.parse(localStorage.getItem("runningData")) || [];
+
+            // Prepare data for the chart
+            const labels = runningData.map(data => data.date);
+            const distances = runningData.map(data => data.distance);
+            const times = runningData.map(data => data.time);
+
+            const ctx = document.getElementById('activityChart').getContext('2d');
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Distance (km)',
+                            data: distances,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Time (min)',
+                            data: times,
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // On page load, check if there's existing data and show the chart if present
+        window.onload = () => {
+            const runningData = JSON.parse(localStorage.getItem("runningData")) || [];
+            if (runningData.length > 0) {
+                document.getElementById('chart-container').style.display = 'block';
+                renderChart();
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <div class="main-content">
+        <div class="header">
+            <h1>Running Activity</h1>
+        </div>
+
+        <!-- Running Activity Section -->
+        <section class="activity-section">
+            <h2>Log Your Running Activity</h2>
+            <input type="number" id="running-distance" placeholder="Distance (km)">
+            <input type="number" id="running-time" placeholder="Time (min)">
+            <button onclick="logRunningActivity()">Log Running Activity</button>
+        </section>
+
+        <!-- Chart Section -->
+        <div class="chart-container" id="chart-container">
+            <canvas id="activityChart"></canvas>
+        </div>
+        <div class="back-link">
+            <a href="index.html">
+                <button style="width: auto;">back to home</button> </a>
+        </div>
+    </div>
+</body>
+
+</html>
