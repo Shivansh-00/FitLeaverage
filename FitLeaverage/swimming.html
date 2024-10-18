@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yoga Activity</title>
+    <title>Swimming Activity</title>
     <style>
         body {
-            background-color: aqua;
+            background-image: url("Swim.gif");
+            background-size: cover;
         }
 
         .main-content {
@@ -79,21 +80,22 @@
             document.body.classList.toggle("dark-mode", darkMode);
         }
 
-        // Log Yoga Activity and store it
-        function logYogaActivity() {
-            const time = parseFloat(document.getElementById("yoga-time").value);
+        // Log Swimming Activity and store it
+        function logSwimmingActivity() {
+            const distance = parseFloat(document.getElementById("swimming-distance").value);
+            const time = parseFloat(document.getElementById("swimming-time").value);
             const date = new Date().toLocaleDateString();
 
-            if (isNaN(time)) {
-                alert("Please enter a valid number for time!");
+            if (isNaN(distance) || isNaN(time)) {
+                alert("Please enter valid numbers for both distance and time!");
                 return;
             }
 
-            const yogaData = JSON.parse(localStorage.getItem("yogaData")) || [];
-            yogaData.push({ date, time });
-            localStorage.setItem("yogaData", JSON.stringify(yogaData));
+            const swimmingData = JSON.parse(localStorage.getItem("swimmingData")) || [];
+            swimmingData.push({ date, distance, time });
+            localStorage.setItem("swimmingData", JSON.stringify(swimmingData));
 
-            alert(`Yoga Activity Logged!\nTime: ${time} minutes`);
+            alert(`Swimming Activity Logged!\nDistance: ${distance} km\nTime: ${time} min`);
 
             // Show chart and update it after logging activity
             document.getElementById('chart-container').style.display = 'block';
@@ -102,26 +104,32 @@
 
         // Calorie Calculation
         function calculateCalories() {
-            const time = parseFloat(document.getElementById("yoga-time").value);
+            const time = parseFloat(document.getElementById("swimming-time").value);
+            const intensity = document.getElementById("swimming-intensity").value;
 
             if (isNaN(time)) {
-                alert("Please enter valid time for yoga!");
+                alert("Please enter valid time for swimming!");
                 return;
             }
 
-            const avgCaloriesPerHour = (400 + 450) / 2; // Average calories burned per hour
-            const caloriesBurned = (time / 60) * avgCaloriesPerHour;
+            let caloriesBurned;
+            if (intensity === "fast") {
+                caloriesBurned = (590 + 931) / 2 * (time / 60); // Average of 590-931 calories per hour
+            } else {
+                caloriesBurned = (413 + 651) / 2 * (time / 60); // Average of 413-651 calories per hour
+            }
 
             document.getElementById("calorie-result").textContent = `You burned approximately ${caloriesBurned.toFixed(2)} calories.`;
         }
 
         // Render the bar chart with data from localStorage
         function renderChart() {
-            const yogaData = JSON.parse(localStorage.getItem("yogaData")) || [];
+            const swimmingData = JSON.parse(localStorage.getItem("swimmingData")) || [];
 
             // Prepare data for the chart
-            const labels = yogaData.map(data => data.date);
-            const times = yogaData.map(data => data.time);
+            const labels = swimmingData.map(data => data.date);
+            const distances = swimmingData.map(data => data.distance);
+            const times = swimmingData.map(data => data.time);
 
             const ctx = document.getElementById('activityChart').getContext('2d');
 
@@ -135,10 +143,17 @@
                     labels: labels,
                     datasets: [
                         {
-                            label: 'Time (minutes)',
-                            data: times,
+                            label: 'Distance (km)',
+                            data: distances,
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Time (min)',
+                            data: times,
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
                             borderWidth: 1
                         }
                     ]
@@ -156,8 +171,8 @@
 
         // On page load, check if there's existing data and show the chart if present
         window.onload = () => {
-            const yogaData = JSON.parse(localStorage.getItem("yogaData")) || [];
-            if (yogaData.length > 0) {
+            const swimmingData = JSON.parse(localStorage.getItem("swimmingData")) || [];
+            if (swimmingData.length > 0) {
                 document.getElementById('chart-container').style.display = 'block';
                 renderChart();
             }
@@ -169,19 +184,24 @@
     <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
     <div class="main-content">
         <div class="header">
-            <h1>Yoga Activity</h1>
+            <h1>Swimming Activity</h1>
         </div>
 
-        <!-- Yoga Activity Section -->
+        <!-- Swimming Activity Section -->
         <section class="activity-section">
-            <h2>Log Your Yoga Activity</h2>
-            <input type="number" id="yoga-time" placeholder="Time (min)">
-            <button onclick="logYogaActivity()">Log Yoga Activity</button>
+            <h2>Log Your Swimming Activity</h2>
+            <input type="number" id="swimming-distance" placeholder="Distance (km)">
+            <input type="number" id="swimming-time" placeholder="Time (min)">
+            <button onclick="logSwimmingActivity()">Log Swimming Activity</button>
         </section>
 
         <!-- Calorie Counter Section -->
         <section class="activity-section">
             <h2>Calculate Calories Burned</h2>
+            <select id="swimming-intensity">
+                <option value="fast">Fast-paced</option>
+                <option value="slow">Slow-paced</option>
+            </select>
             <button onclick="calculateCalories()">Calculate Calories</button>
             <div class="calorie-result" id="calorie-result"></div>
         </section>
@@ -197,5 +217,4 @@
         </div>
     </div>
 </body>
-
 </html>
