@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fit Leaverage</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url("C:\Users\shiva\Downloads\hand-holding-phone-with-lock-screen-it.jpg"); /* Set your background GIF */
+            background-size: cover;
+            background-position: center;
+        }
+        .container {
+            margin-top: 50px;
+            background-color: rgba(255, 255, 255, 0.8); /* Make the container semi-transparent */
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .icon-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 10px;
+            border: none;
+        }
+        .or-text {
+            align-self: center;
+            font-weight: bold;
+        }
+    </style>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">Fit Leaverage💪</h2>
+        <div class="text-center d-flex justify-content-center">
+            <a href="#" class="btn icon-button" id="googleBtn">
+                <img src="C:/Users/shiva/Downloads/7123025_logo_google_g_icon.png" alt="Google Icon" style="width: 30px; height: 30px;">
+            </a>
+            <span class="or-text">Or</span>
+            <a href="#" class="btn icon-button" id="githubBtn">
+                <img src="C:/Users/shiva/Downloads/icons8-github-64.png" alt="GitHub Icon" style="width: 30px; height: 30px;">
+            </a>
+        </div>
+        <hr>
+        <!-- Login Form -->
+        <form action="/auth/login" method="POST">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+        <div class="text-center mt-2">
+            <a href="#" id="register" data-toggle="modal" data-target="#registerModal">Don't have an account? Register</a>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/auth/register" method="POST">
+                        <div class="form-group">
+                            <label for="regUsername">Username:</label>
+                            <input type="text" class="form-control" id="regUsername" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="regEmail">Email:</label>
+                            <input type="email" class="form-control" id="regEmail" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="regPassword">Password:</label>
+                            <input type="password" class="form-control" id="regPassword" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Google Sign-In functionality
+        document.getElementById('googleBtn').onclick = function() {
+            const googleClientId = 'YOUR_GOOGLE_CLIENT_ID'; // Replace with your actual Client ID
+            const redirectUri = 'http://localhost:3000/auth/google/callback'; // Replace with your actual Redirect URI
+            const scope = 'email profile';
+            const url = `https://accounts.google.com/o/oauth2/auth?client_id=${googleClientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
+            window.location.href = url; // Redirect to Google Sign-In page
+        };
+
+        // GitHub button functionality 
+        document.getElementById('githubBtn').onclick = function() {
+            const githubClientId = 'YOUR_GITHUB_CLIENT_ID'; // Replace with your actual GitHub Client ID
+            const redirectUri = 'http://localhost:3000/auth/github/callback'; // Replace with your actual GitHub Redirect URI
+            const scope = 'read:user user:email';
+            const url = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&redirect_uri=${redirectUri}&scope=${scope}`;
+            window.location.href = url; // Redirect to GitHub Sign-In page
+        };
+    </script>
+</body>
+</html>
