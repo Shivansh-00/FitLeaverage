@@ -1,22 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fit Leaverage</title>
+    <title>Fit Leverage</title>
+
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            background-image: url("C:\Users\shiva\Downloads\hand-holding-phone-with-lock-screen-it.jpg"); /* Set your background GIF */
+            background: url('https://example.com/background-video.mp4') no-repeat center center fixed;
             background-size: cover;
-            background-position: center;
+            font-family: 'Poppins', sans-serif;
         }
+
         .container {
             margin-top: 50px;
-            background-color: rgba(255, 255, 255, 0.8); /* Make the container semi-transparent */
-            padding: 20px;
-            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2C3E50;
+        }
+
         .icon-button {
             display: flex;
             align-items: center;
@@ -26,29 +39,94 @@
             border-radius: 50%;
             margin: 0 10px;
             border: none;
+            background-color: #f7f7f7;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
         }
+
+        .icon-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
         .or-text {
             align-self: center;
             font-weight: bold;
+            color: #7f8c8d;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .form-control {
+            border-radius: 25px;
+            border: 1px solid #ddd;
+        }
+
+        .modal-content {
+            background-color: #f7f7f7;
+        }
+
+        .modal-header {
+            background-color: #3498db;
+            color: white;
+        }
+
+        /* Styles for the new login page */
+        #loginPage {
+            display: none;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            margin: auto;
+        }
+
+        .login-header {
+            font-size: 2rem;
+            color: #2C3E50;
+            text-align: center;
         }
     </style>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
+
 <body>
-    <div class="container">
-        <h2 class="text-center">Fit Leaverage💪</h2>
+    <div class="container" id="loginContainer">
+        <h2 class="text-center">Fit Leverage 💪</h2>
+
+        <!-- OAuth Buttons -->
         <div class="text-center d-flex justify-content-center">
             <a href="#" class="btn icon-button" id="googleBtn">
-                <img src="C:/Users/shiva/Downloads/7123025_logo_google_g_icon.png" alt="Google Icon" style="width: 30px; height: 30px;">
+                <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google Icon" style="width: 30px; height: 30px;">
             </a>
             <span class="or-text">Or</span>
             <a href="#" class="btn icon-button" id="githubBtn">
-                <img src="C:/Users/shiva/Downloads/icons8-github-64.png" alt="GitHub Icon" style="width: 30px; height: 30px;">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub Icon" style="width: 30px; height: 30px;">
             </a>
         </div>
+
         <hr>
+
         <!-- Login Form -->
-        <form action="/auth/login" method="POST">
+        <button type="button" class="btn btn-primary btn-block" id="showLoginPage">Login</button>
+
+        <div class="text-center mt-2">
+            <a href="#" id="register" data-toggle="modal" data-target="#registerModal">Don't have an account? Register</a>
+        </div>
+    </div>
+
+    <!-- New Login Page -->
+    <div id="loginPage">
+        <h2 class="login-header">Login to Fit Leverage</h2>
+        <form action="/auth/login" method="POST" id="loginForm">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" class="form-control" id="email" name="email" required>
@@ -58,10 +136,8 @@
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Login</button>
+            <button type="button" class="btn btn-secondary btn-block" id="backToMain">Back</button>
         </form>
-        <div class="text-center mt-2">
-            <a href="#" id="register" data-toggle="modal" data-target="#registerModal">Don't have an account? Register</a>
-        </div>
     </div>
 
     <!-- Register Modal -->
@@ -75,7 +151,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="/auth/register" method="POST">
+                    <form action="/auth/register" method="POST" id="registerForm">
                         <div class="form-group">
                             <label for="regUsername">Username:</label>
                             <input type="text" class="form-control" id="regUsername" name="username" required>
@@ -95,28 +171,68 @@
         </div>
     </div>
 
+    <!-- User Profile Section -->
+    <div class="container" id="userProfile" style="display:none;">
+        <h2 class="text-center">User Profile</h2>
+        <form action="/auth/update-profile" method="POST" id="profileForm">
+            <div class="form-group">
+                <label for="profileUsername">Username:</label>
+                <input type="text" class="form-control" id="profileUsername" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="profileEmail">Email:</label>
+                <input type="email" class="form-control" id="profileEmail" name="email" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
+        </form>
+        <button class="btn btn-danger btn-block mt-3" id="logoutBtn">Logout</button>
+    </div>
+
+    <!-- jQuery, Popper, Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+    <!-- Custom JavaScript -->
     <script>
-        // Google Sign-In functionality
-        document.getElementById('googleBtn').onclick = function() {
-            const googleClientId = 'YOUR_GOOGLE_CLIENT_ID'; // Replace with your actual Client ID
-            const redirectUri = 'http://localhost:3000/auth/google/callback'; // Replace with your actual Redirect URI
+        // Email validation pattern
+        const emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+
+        // Google OAuth functionality
+        document.getElementById('googleBtn').onclick = function () {
+            const googleClientId = 'AIzaSyBAdUAGXrwvVIWO1RhfUeaxiyhN1tMNTqw'; // Your Google Client ID
+            const redirectUri = 'https://yourwebsite.com/auth/google/callback'; // Replace with your Redirect URI
             const scope = 'email profile';
             const url = `https://accounts.google.com/o/oauth2/auth?client_id=${googleClientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
-            window.location.href = url; // Redirect to Google Sign-In page
+            window.location.href = url;
         };
 
-        // GitHub button functionality 
-        document.getElementById('githubBtn').onclick = function() {
-            const githubClientId = 'YOUR_GITHUB_CLIENT_ID'; // Replace with your actual GitHub Client ID
-            const redirectUri = 'http://localhost:3000/auth/github/callback'; // Replace with your actual GitHub Redirect URI
-            const scope = 'read:user user:email';
-            const url = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&redirect_uri=${redirectUri}&scope=${scope}`;
-            window.location.href = url; // Redirect to GitHub Sign-In page
+        // GitHub OAuth functionality
+        document.getElementById('githubBtn').onclick = function () {
+            const githubClientId = 'YOUR_GITHUB_CLIENT_ID'; // Replace with your GitHub Client ID
+            const redirectUri = 'https://yourwebsite.com/auth/github/callback'; // Replace with your Redirect URI
+            const url = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&redirect_uri=${redirectUri}`;
+            window.location.href = url;
+        };
+
+        // Show the login page
+        document.getElementById('showLoginPage').onclick = function () {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'block';
+        };
+
+        // Back to main page
+        document.getElementById('backToMain').onclick = function () {
+            document.getElementById('loginContainer').style.display = 'block';
+            document.getElementById('loginPage').style.display = 'none';
+        };
+
+        // Logout functionality
+        document.getElementById('logoutBtn').onclick = function () {
+            // Add your logout logic here
+            alert('You have been logged out!');
         };
     </script>
 </body>
+
 </html>
