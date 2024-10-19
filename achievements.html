@@ -3,96 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Falling Achievement Badges</title>
+    <title>Health and Fitness Achievement Badges</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             text-align: center;
-            background: linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%);
-            overflow: hidden; /* Prevents scrollbars from appearing */
-            position: relative;
-            height: 100vh;
+            background: linear-gradient(135deg, #f0f8ff 0%, #d1e7dd 100%);
             margin: 0;
-            animation: backgroundAnimation 10s linear infinite; /* Background animation */
-        }
-
-        @keyframes backgroundAnimation {
-            0% { background-color: #cfd9df; }
-            50% { background-color: #e2ebf0; }
-            100% { background-color: #cfd9df; }
+            overflow: hidden;
         }
 
         h1 {
-            color: #333;
+            color: #2c3e50;
             margin: 20px;
             font-size: 3em;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .falling-badge {
+        .score {
+            font-size: 1.5em;
+            margin: 20px 0;
+            color: #27ae60; /* Green color for health */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .badge-collection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px;
+            padding: 10px;
+        }
+
+        .badge {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 100px; /* Fixed width for badges */
+            transition: transform 0.3s, box-shadow 0.3s; /* Transition effects */
+        }
+
+        .badge:hover {
+            transform: translateY(-5px); /* Lift effect on hover */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Deeper shadow on hover */
+        }
+
+        .badge i {
+            font-size: 2.5em; /* Icon size */
+            margin-bottom: 10px; /* Space between icon and text */
+        }
+
+        .stats-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer {
             position: absolute;
-            font-size: 3em; /* Size of the trophy icon */
-            opacity: 0.8;
-            animation: fall linear forwards; /* Animation to fall down */
-            cursor: pointer; /* Show pointer on hover */
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            width: 80%; /* Responsive width */
         }
 
-        /* Animation for the falling badges */
-        @keyframes fall {
-            0% {
-                transform: translateY(0) rotate(0deg); /* Start position */
-                opacity: 1;
+        .footer h2 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .footer p {
+            margin: 5px 0;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            border-radius: 8px;
+        }
+
+        .modal h2 {
+            margin-top: 0;
+        }
+
+        .modal button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #27ae60; /* Green button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal button:hover {
+            background: #218838; /* Darker green on hover */
+        }
+
+        @media (max-width: 600px) {
+            .badge {
+                width: 80px; /* Adjust badge size for smaller screens */
             }
-            100% {
-                transform: translateY(100vh) rotate(360deg); /* Move down and rotate */
-                opacity: 0;
+            h1 {
+                font-size: 2.5em; /* Adjust title size for smaller screens */
             }
-        }
-
-        /* Background stars */
-        .star {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: twinkle 1.5s infinite alternate;
-        }
-
-        @keyframes twinkle {
-            0% { opacity: 0.2; }
-            100% { opacity: 1; }
+            .footer {
+                padding: 10px; /* Adjust padding for smaller screens */
+            }
         }
     </style>
 </head>
 <body>
 
-<h1>Achievements</h1>
-<div class="falling-badges"></div>
+<h1>Fitness Achievements</h1>
+<div class="score">Score: <span id="score">0</span></div>
+
+<div class="stats-panel">
+    <p>Total Badges Collected: <span id="total-badges">0</span></p>
+    <p>Time Played: <span id="time-played">0</span> seconds</p>
+</div>
+
+<div class="badge-collection" id="badgeCollection"></div>
+
+<!-- Modal for badge collection -->
+<div class="modal" id="badgeModal">
+    <h2>Your Collected Badges</h2>
+    <div class="badge-collection" id="badgeModalCollection"></div>
+    <button id="closeModal">Close</button>
+</div>
+
+<!-- Footer Section -->
+<div class="footer">
+    <h2>How to Play</h2>
+    <p>Catch falling badges by clicking on them!</p>
+    <p>Collect as many as you can to increase your score!</p>
+    <h2>A CHANCE TO WIN $100,000+ IN PRIZES & AWARDS!</h2>
+</div>
 
 <audio id="fallSound" src="" preload="auto"></audio>
+<audio id="bgMusic" src="https://www.soundjay.com/button/sounds/button-3.mp3" loop preload="auto"></audio>
 
 <script>
     const badges = [
-        { icon: 'fas fa-trophy', color: '#FFD700', sound: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-        { icon: 'fas fa-medal', color: '#C0C0C0', sound: 'https://www.soundjay.com/button/sounds/button-4.mp3' },
-        { icon: 'fas fa-trophy', color: '#CD7F32', sound: 'https://www.soundjay.com/button/sounds/button-5.mp3' },
-        { icon: 'fas fa-star', color: '#4CAF50', sound: 'https://www.soundjay.com/button/sounds/button-6.mp3' }
+        { icon: 'fas fa-dumbbell', color: '#007bff', sound: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
+        { icon: 'fas fa-heartbeat', color: '#dc3545', sound: 'https://www.soundjay.com/button/sounds/button-4.mp3' },
+        { icon: 'fas fa-running', color: '#ffc107', sound: 'https://www.soundjay.com/button/sounds/button-5.mp3' },
+        { icon: 'fas fa-medkit', color: '#28a745', sound: 'https://www.soundjay.com/button/sounds/button-6.mp3' }
     ];
+
+    let score = 0; // Initialize score
+    let totalBadges = 0; // Total badges collected
+    let timePlayed = 0; // Time played in seconds
+
+    // Start background music
+    const bgMusic = document.getElementById('bgMusic');
+    bgMusic.play();
+
+    function updateScore() {
+        document.getElementById('score').innerText = score; // Update the displayed score
+        document.getElementById('total-badges').innerText = totalBadges; // Update total badges
+    }
 
     function createFallingBadge() {
         const badgeInfo = badges[Math.floor(Math.random() * badges.length)];
         const badge = document.createElement('div');
-        badge.classList.add('falling-badge');
+        badge.classList.add('badge');
         badge.innerHTML = `<i class="${badgeInfo.icon}" style="color: ${badgeInfo.color};"></i>`;
+        badge.style.background = "rgba(255, 255, 255, 0.8)";
 
         // Randomize the horizontal position of the badge
+        badge.style.position = "absolute";
         badge.style.left = Math.random() * (window.innerWidth - 100) + 'px'; // Adjust for width of icons
+        badge.style.top = "-100px"; // Start above the viewport
 
-        // Randomize the animation duration and delay
-        const duration = Math.random() * 3 + 2; // Between 2 to 5 seconds
-        badge.style.animationDuration = duration + 's';
-        badge.style.animationDelay = Math.random() * 2 + 's'; // Random delay
+        // Animate the badge falling down
+        badge.animate([
+            { transform: 'translateY(0)' },
+            { transform: 'translateY(100vh)' }
+        ], {
+            duration: Math.random() * 3000 + 2000, // Between 2 to 5 seconds
+            easing: 'linear'
+        });
 
         // Play sound effect
         const fallSound = document.getElementById('fallSound');
@@ -102,42 +213,57 @@
 
         // Add click event to collect badge
         badge.addEventListener('click', () => {
-            alert(`You collected a badge!`);
+            score++; // Increment score
+            totalBadges++; // Increment total badges
+            updateScore(); // Update score display
+            addBadgeToCollection(badgeInfo.icon, badgeInfo.color);
             badge.remove();
         });
 
         document.body.appendChild(badge);
 
-        // Remove the badge after animation completes
-        badge.addEventListener('animationend', () => {
-            badge.remove();
-        });
-    }
-
-    // Generate badges at intervals
-    setInterval(createFallingBadge, 700); // Adjust the interval to change frequency
-
-    // Add background stars
-    function createStars() {
-        const star = document.createElement('div');
-        star.classList.add('star');
-        const size = Math.random() * 5 + 2; // Random size for stars
-        star.style.width = size + 'px';
-        star.style.height = size + 'px';
-        star.style.top = Math.random() * 100 + 'vh';
-        star.style.left = Math.random() * 100 + 'vw';
-
-        document.body.appendChild(star);
-
-        // Remove star after a certain time
+        // Remove the badge after a certain time
         setTimeout(() => {
-            star.remove();
-        }, 3000);
+            badge.remove();
+        }, Math.random() * 3000 + 2000); // Remove after a random time
     }
 
-    // Generate stars at intervals
-    setInterval(createStars, 1000); // Adjust frequency of stars
-</script>
+    function addBadgeToCollection(icon, color) {
+        const badgeCollection = document.getElementById('badgeModalCollection');
+        const badge = document.createElement('div');
+        badge.classList.add('badge');
+        badge.innerHTML = `<i class="${icon}" style="color: ${color};"></i>`;
+        badgeCollection.appendChild(badge);
+    }
 
+    // Show modal with collected badges
+    function showBadgeModal() {
+        document.getElementById('badgeModal').style.display = 'block'; // Show modal
+    }
+
+    // Close the modal
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('badgeModal').style.display = 'none'; // Hide modal
+    });
+
+    // Update the time played every second
+    setInterval(() => {
+        timePlayed++;
+        document.getElementById('time-played').innerText = timePlayed; // Update time played display
+    }, 1000);
+
+    // Create falling badges every 1 second
+    setInterval(createFallingBadge, 1000);
+
+    // Update score display on load
+    updateScore();
+
+    // Allow opening the badge modal with a key press
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'b') { // Press 'b' to open the badge modal
+            showBadgeModal();
+        }
+    });
+</script>
 </body>
 </html>
