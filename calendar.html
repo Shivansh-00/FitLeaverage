@@ -6,79 +6,73 @@
     <title>Streak Calendar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        :root {
+            --light-bg: #e8f0fe;
+            --dark-bg: #fff;
+            --primary-color: #4caf50;
+            --hover-color: #45a049;
+            --text-color: #4a4a4a;
+            --tooltip-bg: #333;
+            --tooltip-text: white;
+            --error-color: #f44336;
+        }
+        
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #e8f0fe; /* Light background color */
+            background-color: var(--light-bg);
             margin: 0;
             padding: 20px;
             text-align: center;
+            color: var(--text-color);
         }
         h1 {
             margin-bottom: 20px;
-            color: #4a4a4a;
-            font-size: 2.5rem; /* Increased font size */
+            font-size: 2.5rem;
         }
         #stats {
             margin-bottom: 20px;
-            color: #555;
             font-size: 1.2rem;
         }
         .calendar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 10px; /* Increased gap between days */
+            gap: 10px;
             justify-content: center;
             max-width: 600px;
             margin: auto;
         }
         .day {
-            width: 60px; /* Increased width */
-            height: 60px; /* Increased height */
+            width: 60px;
+            height: 60px;
             border-radius: 10px;
             position: relative;
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.2rem; /* Increased font size for day numbers */
+            font-size: 1.2rem;
         }
         .day:hover {
-            transform: translateY(-2px);
+            transform: scale(1.05);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
-        .day[data-streak="0"] {
-            background-color: #f2f2f2; /* No activity */
-        }
-        .day[data-streak="1"] {
-            background-color: #4caf50; /* 1 day streak */
-        }
-        .day[data-streak="2"] {
-            background-color: #66bb6a; /* 2 day streak */
-        }
-        .day[data-streak="3"] {
-            background-color: #8bc34a; /* 3 day streak */
-        }
-        .day[data-streak="4"] {
-            background-color: #cddc39; /* 4 day streak */
-        }
-        .day[data-streak="5"] {
-            background-color: #ffd600; /* 5 day streak */
-        }
-        .day[data-streak="6"] {
-            background-color: #ff9800; /* 6 day streak */
-        }
-        .day[data-streak="7"] {
-            background-color: #f44336; /* 7+ day streak */
-        }
+        .day[data-streak="0"] { background-color: #f2f2f2; }
+        .day[data-streak="1"] { background-color: #4caf50; }
+        .day[data-streak="2"] { background-color: #66bb6a; }
+        .day[data-streak="3"] { background-color: #8bc34a; }
+        .day[data-streak="4"] { background-color: #cddc39; }
+        .day[data-streak="5"] { background-color: #ffd600; }
+        .day[data-streak="6"] { background-color: #ff9800; }
+        .day[data-streak="7"] { background-color: #f44336; }
         .tooltip {
             position: absolute;
-            bottom: 100%; /* Position above the box */
+            bottom: 100%;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #333;
-            color: white;
+            background-color: var(--tooltip-bg);
+            color: var(--tooltip-text);
             padding: 5px;
             border-radius: 5px;
             font-size: 12px;
@@ -94,39 +88,58 @@
             top: 5px;
             right: 5px;
             font-size: 14px;
-            color: #ff5722; /* Fire color */
+            color: #ff5722;
         }
         #inputContainer {
             margin: 20px 0;
             display: flex;
             justify-content: center;
-            gap: 10px; /* Increased gap between inputs */
+            gap: 10px;
         }
         input[type="number"] {
-            width: 70px; /* Increased width for inputs */
+            width: 70px;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 1rem; /* Increased font size for inputs */
+            font-size: 1rem;
             transition: border 0.3s;
         }
         input[type="number"]:focus {
-            border-color: #4caf50; /* Focus effect */
-            outline: none; /* Remove default outline */
+            border-color: var(--primary-color);
+            outline: none;
         }
         button {
             padding: 10px 15px;
             border: none;
             border-radius: 5px;
-            background-color: #4caf50; /* Button color */
+            background-color: var(--primary-color);
             color: white;
-            font-size: 1rem; /* Increased font size for button */
+            font-size: 1rem;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s;
         }
         button:hover {
-            background-color: #45a049; /* Darker shade on hover */
+            background-color: var(--hover-color);
             transform: translateY(-2px);
+        }
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        #monthSelector {
+            margin: 20px 0;
+        }
+        @media (max-width: 600px) {
+            .day {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            input[type="number"] {
+                width: 50px;
+                padding: 5px;
+            }
         }
     </style>
 </head>
@@ -138,18 +151,40 @@
     <p id="longestStreak">Longest Streak: 0 days</p>
 </div>
 
+<div id="monthSelector">
+    <button onclick="changeMonth(-1)">&#8592; Previous</button>
+    <span id="monthLabel"></span>
+    <button onclick="changeMonth(1)">Next &#8594;</button>
+</div>
+
 <div class="calendar" id="calendar"></div>
 
 <div id="inputContainer">
-    <input type="number" id="dayInput" min="1" max="31" placeholder="Day (1-31)">
-    <input type="number" id="streakInput" min="0" max="7" placeholder="Streak (0-7)">
+    <input type="number" id="dayInput" min="1" max="31" placeholder="Day (1-31)" aria-label="Day (1-31)">
+    <input type="number" id="streakInput" min="0" max="7" placeholder="Streak (0-7)" aria-label="Streak (0-7)">
     <button onclick="updateStreak()">Update Streak</button>
 </div>
+<p class="error-message" id="error-message"></p>
 
 <script>
-    let streaks = Array(31).fill(0); // Initialize streak array for 31 days
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    let streaks = Array(31).fill(0);
     let currentStreak = 0;
     let longestStreak = 0;
+
+    // Load streak data from local storage
+    const loadStreakData = () => {
+        const storedData = localStorage.getItem('streaks');
+        if (storedData) {
+            streaks = JSON.parse(storedData);
+        }
+    };
+
+    // Save streak data to local storage
+    const saveStreakData = () => {
+        localStorage.setItem('streaks', JSON.stringify(streaks));
+    };
 
     function updateStats() {
         currentStreak = Math.max(...streaks);
@@ -160,13 +195,15 @@
 
     function createCalendar() {
         const calendarElement = document.getElementById('calendar');
-        const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+        const monthLabel = document.getElementById('monthLabel');
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
         // Clear existing calendar
         calendarElement.innerHTML = '';
+        monthLabel.innerText = new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' }) + ' ' + currentYear;
 
         for (let day = 1; day <= daysInMonth; day++) {
-            const streak = streaks[day - 1]; // Get streak for the day
+            const streak = streaks[day - 1];
             const dayElement = document.createElement('div');
             dayElement.classList.add('day');
             dayElement.setAttribute('data-streak', streak);
@@ -185,26 +222,48 @@
                 dayElement.appendChild(fireIcon);
             }
 
+            dayElement.onclick = () => {
+                alert(`You clicked on day ${day}. Streak: ${streak}`);
+            };
+
             calendarElement.appendChild(dayElement);
         }
         updateStats();
     }
 
-    function updateStreak() {
-        const dayInput = parseInt(document.getElementById('dayInput').value);
-        const streakInput = parseInt(document.getElementById('streakInput').value);
-
-        if (dayInput > 0 && dayInput <= 31 && streakInput >= 0 && streakInput <= 7) {
-            streaks[dayInput - 1] = streakInput; // Update streak for the specified day
-            createCalendar(); // Refresh calendar to show new streaks
-        } else {
-            alert("Please enter valid day (1-31) and streak (0-7) values.");
+    function changeMonth(direction) {
+        currentMonth += direction;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        } else if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
         }
+        createCalendar();
     }
 
-    // Initialize calendar on load
+    function updateStreak() {
+        const day = parseInt(document.getElementById('dayInput').value);
+        const streak = parseInt(document.getElementById('streakInput').value);
+        const errorMessage = document.getElementById('error-message');
+
+        if (isNaN(day) || isNaN(streak) || day < 1 || day > 31 || streak < 0 || streak > 7) {
+            errorMessage.innerText = 'Please enter valid day and streak values.';
+            return;
+        }
+
+        streaks[day - 1] = streak;
+        saveStreakData();
+        createCalendar();
+        errorMessage.innerText = ''; // Clear error message
+        document.getElementById('dayInput').value = ''; // Clear input field
+        document.getElementById('streakInput').value = ''; // Clear input field
+    }
+
+    // Initialize calendar
+    loadStreakData();
     createCalendar();
 </script>
-
 </body>
 </html>
