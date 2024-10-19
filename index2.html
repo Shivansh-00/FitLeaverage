@@ -189,6 +189,36 @@
                 height: 357px;
             }
         }
+
+        /* Quote section styling */
+        .quote {
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 25px;
+            color: white;
+            margin-top: 40px;
+            font-style: italic;
+        }
+
+        /* Footer section styling */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-family: 'Roboto', sans-serif;
+            color: rgb(248, 7, 7); /* Red color for copyright text */
+            font-size: 14px;
+        }
+
+        /* Footer links styling */
+        .footer a {
+            color: rgb(248, 7, 7); /* Same red color for links */
+            text-decoration: none;
+        }
+
+        /* Footer links hover effect */
+        .footer a:hover {
+            text-decoration: underline; /* Underline links on hover */
+        }
     </style>
 </head>
 <body>
@@ -250,16 +280,33 @@
             <img src="Walking.jpg" alt="Walking">
             <h2>Walking</h2>
         </div>
+    </div>
 
-        <script>
-            function toggleSidebar() {
-                const sidebar = document.getElementById("sidebar");
-                sidebar.style.left = sidebar.style.left === "0px" ? "-250px" : "0px";
+    <!-- Quote and Copyright Section -->
+    <div class="quote">
+        "Fitness is not about being better than someone else. It’s about being better than you used to be."
+    </div>
+
+    <div class="footer">
+        &copy; 2024 Fit Leverage | All Rights Reserved | 
+        <a href="privacy.html">Privacy Policy</a> |
+        <a href="terms.html">Terms of Service</a>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            if (sidebar.style.left === "-250px") {
+                sidebar.style.left = "0";
+            } else {
+                sidebar.style.left = "-250px";
             }
-    
-            function redirectToPage(page) {
-                window.location.href = page;
-            }
-        </script>
-    </body>
+        }
+
+        function redirectToPage(page) {
+            window.location.href = page;
+        }
+    </script>
+
+</body>
 </html>
