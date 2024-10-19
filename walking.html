@@ -8,54 +8,69 @@
     <style>
         body {
             background-image: url("Walking.jpg");
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-size: cover;
+            background-position: center center;
+            font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 0;
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .dark-mode {
-            background-color: #121212;
-            color: #e0e0e0;
-        }
-
-        .container {
+        .main-content {
             padding: 20px;
             max-width: 800px;
-            margin: 0 auto;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
         h1 {
-            text-align: center;
+            margin: 0;
         }
 
-        .input-section {
+        .activity-section {
             margin: 20px 0;
         }
 
         .input-section input {
-            padding: 10px;
-            width: 100%;
-            margin: 10px 0;
+            width: calc(100% - 24px);
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #3498db;
             border-radius: 5px;
-            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            transition: border-color 0.3s;
+        }
+
+        .input-section input:focus {
+            border-color: #2980b9;
+            outline: none;
         }
 
         .input-section button {
-            padding: 10px;
-            width: 100%;
-            background-color: #28a745;
-            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
             border: none;
             border-radius: 5px;
+            background-color: #3498db;
+            color: white;
             cursor: pointer;
-            margin-bottom: 10px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .input-section button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
         }
 
         .chart-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 20px auto;
+            margin: 20px 0;
             display: none;
         }
 
@@ -72,15 +87,22 @@
         }
 
         .dark-mode-toggle {
-            float: right;
-            margin-top: -40px;
-            margin-right: 10px;
-            padding: 10px;
-            background-color: #28a745;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #333;
             color: white;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: white;
         }
 
         .dark-mode .dark-mode-toggle {
@@ -89,18 +111,34 @@
         }
 
         .back-link {
-            text-align: center;
             margin-top: 20px;
+            text-align: center;
         }
 
-        .back-link button {
-            padding: 10px;
-            width: auto;
-            background-color: #333;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
+        .video-section {
+            margin: 20px 0;
+        }
+
+        .video-container {
+            display: flex;
+            justify-content: space-between;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .video-item {
+            flex: 0 0 auto;
+            margin-right: 10px;
+        }
+
+        .video-item img {
+            width: 200px; /* Thumbnail width */
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .video-item img:hover {
+            transform: scale(1.05);
         }
 
     </style>
@@ -108,34 +146,70 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>Walking Activity</h1>
-        <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-
-        <div class="input-section">
-            <input type="number" id="walking-distance" placeholder="Enter distance (km)">
-            <input type="number" id="walking-time" placeholder="Enter time (minutes)">
-            <button onclick="logWalkingActivity()">Log Walking Activity</button>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <div class="main-content">
+        <div class="header">
+            <h1>Walking Activity</h1>
         </div>
 
-        <div class="input-section">
+        <!-- Walking Activity Section -->
+        <section class="activity-section">
+            <h2>Log Your Walking Activity</h2>
+            <div class="input-section">
+                <input type="number" id="walking-distance" placeholder="Distance (km)">
+                <input type="number" id="walking-time" placeholder="Time (minutes)">
+                <button onclick="logWalkingActivity()">Log Walking Activity</button>
+            </div>
+        </section>
+
+        <!-- Calorie Counter Section -->
+        <section class="activity-section">
             <h2>Calculate Calories Burned</h2>
-            <input type="number" id="walking-weight" placeholder="Enter your weight (kg)">
-            <select id="walking-intensity">
-                <option value="brisk">Brisk Walk</option>
-                <option value="leisurely">Leisurely Walk</option>
-            </select>
-            <button onclick="calculateCalories()">Calculate Calories</button>
-            <div class="calorie-result" id="calorie-result"></div>
-        </div>
+            <div class="input-section">
+                <input type="number" id="walking-weight" placeholder="Your Weight (kg)">
+                <select id="walking-intensity">
+                    <option value="brisk">Brisk Walk</option>
+                    <option value="leisurely">Leisurely Walk</option>
+                </select>
+                <button onclick="calculateCalories()">Calculate Calories</button>
+                <div class="calorie-result" id="calorie-result"></div>
+            </div>
+        </section>
 
+        <!-- Chart Section -->
         <div class="chart-container" id="chart-section">
             <canvas id="walkingChart"></canvas>
         </div>
 
+        <!-- Video Links Section -->
+        <div class="video-section">
+            <h2>Walking Tutorials</h2>
+
+            <div class="video-container">
+                <div class="video-item">
+                    <a href="https://youtu.be/bO6NNfX_1ns?feature=shared" target="_blank">
+                        <img src="walk1.png" alt="Beginner Tutorial">
+                    </a>
+                    <p>Walking Basics</p>
+                </div>
+                <div class="video-item">
+                    <a href="https://youtu.be/HHundXpNetQ?feature=shared" target="_blank">
+                        <img src="walk2.png" alt="Intermediate Tutorial">
+                    </a>
+                    <p>Power Walking</p>
+                </div>
+                <div class="video-item">
+                    <a href="https://youtu.be/V-2szNtHea4?feature=shared" target="_blank">
+                        <img src="walk3.png" alt="Advanced Tutorial">
+                    </a>
+                    <p>Walking Techniques</p>
+                </div>
+            </div>
+        </div>
+
         <div class="back-link">
             <a href="index2.html">
-                <button>Back to Home</button>
+                <button style="width: auto;">Back to Home</button>
             </a>
         </div>
     </div>
@@ -173,8 +247,8 @@
 
         // Calculate calories burned
         function calculateCalories() {
-            const time = parseFloat(document.getElementById('walking-time').value);
             const weight = parseFloat(document.getElementById('walking-weight').value);
+            const time = parseFloat(document.getElementById('walking-time').value);
             const intensity = document.getElementById('walking-intensity').value;
 
             if (!time || !weight) {
@@ -214,21 +288,20 @@
                         {
                             label: 'Distance (km)',
                             data: distances,
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(52, 152, 219, 0.6)',
+                            borderColor: 'rgba(52, 152, 219, 1)',
                             borderWidth: 1
                         },
                         {
-                            label: 'Time (minutes)',
+                            label: 'Time (min)',
                             data: times,
-                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                            borderColor: 'rgba(153, 102, 255, 1)',
+                            backgroundColor: 'rgba(241, 196, 15, 0.6)',
+                            borderColor: 'rgba(241, 196, 15, 1)',
                             borderWidth: 1
                         }
                     ]
                 },
                 options: {
-                    responsive: true,
                     scales: {
                         y: {
                             beginAtZero: true
@@ -237,12 +310,6 @@
                 }
             });
         }
-
-        window.onload = () => {
-            if (walkingData.length > 0) {
-                renderChart();
-            }
-        };
     </script>
 </body>
 

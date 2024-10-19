@@ -7,13 +7,20 @@
     <title>Yoga Activity</title>
     <style>
         body {
-            background-color: rgb(49, 159, 49);
+            background-image: url("Yoga.jpg");
+            background-size: cover;
+            background-position: center center;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
         }
 
         .main-content {
             padding: 20px;
             max-width: 800px;
             margin: auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         .header {
@@ -38,12 +45,14 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            padding: 10px;
+            padding: 12px 20px;
+            font-size: 16px;
             background-color: #333;
             color: white;
             border: none;
             cursor: pointer;
             border-radius: 5px;
+            transition: background-color 0.3s;
         }
 
         .dark-mode {
@@ -62,10 +71,78 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        input[type="number"] {
+            width: calc(100% - 24px);
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #2980b9;
+            outline: none;
+        }
+
         .calorie-result {
             margin-top: 20px;
             font-weight: bold;
             font-size: 18px;
+        }
+
+        /* Video section styles */
+        .video-section {
+            margin: 20px 0;
+        }
+
+        .video-section h2 {
+            margin-bottom: 10px;
+        }
+
+        .video-container {
+            display: flex;
+            justify-content: space-between;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .video-item {
+            flex: 0 0 auto;
+            margin-right: 10px;
+        }
+
+        .video-item img {
+            width: 200px; /* Thumbnail width */
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .video-item img:hover {
+            transform: scale(1.05);
+        }
+
+        .back-link {
+            margin-top: 20px;
+            text-align: center;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -190,6 +267,29 @@
         <div class="chart-container" id="chart-container">
             <canvas id="activityChart"></canvas>
         </div>
+
+        <!-- Video Section -->
+        <div class="video-section">
+            <h2>Yoga Videos</h2>
+            <div class="video-container">
+                <div class="video-item">
+                    <a href="https://youtu.be/FdyhENXyIQ4?feature=shared" target="_blank">
+                        <img src="yg1.png" alt="Yoga Video 1">
+                    </a>
+                </div>
+                <div class="video-item">
+                    <a href="https://youtu.be/dAqQqmaI9vY?feature=shared" target="_blank">
+                        <img src="yg2.png" alt="Yoga Video 2">
+                    </a>
+                </div>
+                <div class="video-item">
+                    <a href="https://youtu.be/xfhfltT2Keo?feature=shared" target="_blank">
+                        <img src="yg3.png" alt="Yoga Video 3">
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <div class="back-link">
             <a href="index2.html">
                 <button style="width: auto;">Back to Home</button>

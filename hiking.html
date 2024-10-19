@@ -7,13 +7,20 @@
     <title>Hiking Activity</title>
     <style>
         body {
-            background-color: antiquewhite;
+            background-image: url("hiking.jpg");
+            background-size: cover;
+            background-position: center center;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
         }
 
         .main-content {
             padding: 20px;
             max-width: 800px;
             margin: auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         .header {
@@ -38,12 +45,14 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            padding: 10px;
+            padding: 12px 20px;
+            font-size: 16px;
             background-color: #333;
             color: white;
             border: none;
             cursor: pointer;
             border-radius: 5px;
+            transition: background-color 0.3s;
         }
 
         .dark-mode {
@@ -62,10 +71,95 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        input[type="number"], select {
+            width: calc(100% - 24px);
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus, select:focus {
+            border-color: #2980b9;
+            outline: none;
+        }
+
         .calorie-result {
             margin-top: 20px;
             font-weight: bold;
             font-size: 18px;
+        }
+
+        /* Video section styles */
+        .video-section {
+            margin: 20px 0;
+        }
+
+        .video-section h2 {
+            margin-bottom: 10px;
+        }
+
+        .video-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .video-item {
+            flex: 0 0 30%;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .video-item img {
+            width: 100%; /* Thumbnail width */
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .video-item img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 10px;
+            }
+
+            .dark-mode-toggle {
+                top: 10px;
+                right: 10px;
+                padding: 8px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .video-item {
+                flex: 0 0 100%;
+            }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -81,8 +175,8 @@
         <!-- Hiking Activity Section -->
         <section class="activity-section">
             <h2>Log Your Hiking Activity</h2>
-            <input type="number" id="hiking-distance" placeholder="Distance (km)">
-            <input type="number" id="hiking-time" placeholder="Time (min)">
+            <input type="number" id="hiking-distance" placeholder="Distance (km)" required>
+            <input type="number" id="hiking-time" placeholder="Time (min)" required>
             <button onclick="logHikingActivity()">Log Hiking Activity</button>
         </section>
 
@@ -101,6 +195,32 @@
         <div class="chart-container" id="chart-container">
             <canvas id="activityChart"></canvas>
         </div>
+
+        <!-- Video Links Section -->
+        <div class="video-section">
+            <h2>Hiking Tutorials</h2>
+            <div class="video-container">
+                <div class="video-item">
+                    <a href="https://youtu.be/edElLWvSVLk?feature=shared" target="_blank">
+                        <img src="hk1.png" alt="Beginner Tutorial">
+                    </a>
+                    <p>Beginner's Guide to Hiking</p>
+                </div>
+                <div class="video-item">
+                    <a href="https://youtu.be/_6J-UPxiPPc?feature=shared" target="_blank">
+                        <img src="hk2.png" alt="Intermediate Tutorial">
+                    </a>
+                    <p>Hiking Techniques</p>
+                </div>
+                <div class="video-item">
+                    <a href="https://youtu.be/tEmo13gNtkE?feature=shared" target="_blank">
+                        <img src="hk3.png" alt="Advanced Tutorial">
+                    </a>
+                    <p>Advanced Hiking Skills</p>
+                </div>
+            </div>
+        </div>
+
         <div class="back-link">
             <a href="index2.html">
                 <button style="width: auto;">Back to Home</button>
@@ -169,7 +289,7 @@
             const ctx = document.getElementById('activityChart').getContext('2d');
 
             if (chartInstance) {
-                chartInstance.destroy();
+                chartInstance.destroy(); // Destroy existing chart instance before creating a new one
             }
 
             chartInstance = new Chart(ctx, {
@@ -180,16 +300,12 @@
                         {
                             label: 'Distance (km)',
                             data: distances,
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
                         },
                         {
                             label: 'Time (min)',
                             data: times,
-                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                            borderColor: 'rgba(153, 102, 255, 1)',
-                            borderWidth: 1
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
                         }
                     ]
                 },
@@ -204,8 +320,8 @@
             });
         }
 
-        // On page load, check if there's existing data and show the chart if present
-        window.onload = () => {
+        // Show chart if there's data in localStorage on page load
+        window.onload = function () {
             if (hikingData.length > 0) {
                 document.getElementById('chart-container').style.display = 'block';
                 renderChart();
