@@ -8,23 +8,26 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f9f9f9;
+            background: url("C:/Users/shiva/Downloads/telephone-4440525_960_720.jpg") no-repeat center center fixed; /* Set the new background image */
+            background-size: cover; /* Cover the entire background */
             margin: 0;
             padding: 20px;
         }
         h1 {
             text-align: center;
-            color: #333;
+            color: #000000;
             margin-bottom: 20px;
-            font-size: 2.5em;
+            font-size: 3em;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         }
         .container {
             max-width: 800px;
             margin: auto;
-            background: white;
-            padding: 40px; /* Increased padding for a more spacious feel */
-            border-radius: 10px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.9); /* Transparent white background */
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
             animation: fadeIn 0.5s;
         }
         @keyframes fadeIn {
@@ -37,76 +40,91 @@
         }
         .form-group {
             position: relative;
-            margin-bottom: 20px; /* Space between input fields */
+            margin-bottom: 25px;
         }
         label {
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: bold;
             color: #555;
-            display: block; /* Ensures label takes full width */
+            display: block;
+            font-size: 1.1em;
         }
         input, textarea {
-            padding: 12px 12px 12px 40px; /* Padding for the icons */
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
             font-size: 16px;
             width: 100%;
-            transition: border-color 0.3s;
-            box-sizing: border-box; /* Ensures padding is included in width */
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
+            background-color: #f7f7f7;
         }
         input:focus, textarea:focus {
             border-color: #007BFF;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
             outline: none;
         }
         button {
-            padding: 12px;
+            padding: 15px;
             background-color: #007BFF;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 50px;
             cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            margin-top: 10px; /* Space above button */
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.4s, transform 0.2s;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
         }
         button:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
         }
         .icon {
             position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%); /* Center the icon vertically */
-            color: #aaa;
-            font-size: 18px; /* Adjusted icon size */
+            left: 15px;
+            top: 70%;
+            transform: translateY(-50%);
+            color: #007BFF;
+            font-size: 22px;
         }
         .thank-you {
             display: none;
             text-align: center;
             color: green;
-            font-size: 20px;
-            margin-top: 20px;
+            font-size: 22px;
+            margin-top: 25px;
             animation: fadeIn 0.5s;
+            padding: 10px;
+            border: 1px solid #4caf50;
+            border-radius: 8px;
+            background-color: #e8f5e9;
         }
         .social-media {
             text-align: center;
-            margin-top: 30px;
+            margin-top: 40px;
         }
         .social-media a {
-            margin: 0 10px;
-            font-size: 24px;
+            margin: 0 12px;
+            font-size: 28px;
             color: #007BFF;
-            transition: color 0.3s;
+            transition: color 0.3s, transform 0.3s;
         }
         .social-media a:hover {
             color: #0056b3;
+            transform: scale(1.2);
         }
         @media (max-width: 600px) {
             .container {
-                padding: 20px; /* Reduced padding for smaller screens */
+                padding: 30px;
             }
             h1 {
-                font-size: 1.8em;
+                font-size: 2.2em;
+            }
+            button {
+                font-size: 16px;
+                padding: 12px;
             }
         }
     </style>
@@ -119,19 +137,19 @@
         <div class="form-group">
             <i class="fas fa-user icon"></i>
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required placeholder="Your Name" aria-required="true">
+            <input type="text" id="name" name="name" required placeholder="Your Name" aria-required="true" aria-label="Name">
         </div>
 
         <div class="form-group">
             <i class="fas fa-envelope icon"></i>
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required placeholder="Your Email" aria-required="true">
+            <input type="email" id="email" name="email" required placeholder="Your Email" aria-required="true" aria-label="Email">
         </div>
 
         <div class="form-group">
             <i class="fas fa-comment-dots icon"></i>
             <label for="message">Message:</label>
-            <textarea id="message" name="message" rows="5" required placeholder="Your Message" aria-required="true"></textarea>
+            <textarea id="message" name="message" rows="5" required placeholder="Your Message" aria-required="true" aria-label="Message"></textarea>
         </div>
 
         <button type="submit">Send Message</button>
@@ -152,13 +170,23 @@
     const thankYouMessage = document.getElementById('thankYouMessage');
 
     form.addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent default form submission
-        
-        // Show thank you message
-        thankYouMessage.style.display = 'block';
-
-        // Clear the form
-        form.reset();
+        if (!form.checkValidity()) {
+            event.preventDefault(); // Prevent submission
+            alert('Please fill in all required fields correctly.');
+        } else {
+            event.preventDefault(); // Prevent default form submission
+            
+            // Show thank you message
+            thankYouMessage.style.display = 'block';
+            
+            // Clear the form
+            form.reset();
+            
+            // Hide the message after 5 seconds
+            setTimeout(() => {
+                thankYouMessage.style.display = 'none';
+            }, 5000);
+        }
     });
 </script>
 
