@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9; /* Light background color */
+            background-color: #f4f4f9;
             margin: 0;
             padding: 20px;
             text-align: center;
@@ -17,16 +17,16 @@
         h1 {
             margin-bottom: 20px;
             color: #4a4a4a;
-            font-size: 2.5rem; /* Increased font size */
+            font-size: 2.5rem;
         }
 
         .leaderboard-container {
-            background: #ffffff; /* White background for the leaderboard */
+            background: #ffffff;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            max-width: 800px; /* Limit width */
-            margin: auto; /* Center the leaderboard */
+            max-width: 800px;
+            margin: auto;
         }
 
         table {
@@ -40,9 +40,9 @@
         }
 
         th {
-            background-color: #4caf50; /* Header color */
+            background-color: #4caf50;
             color: white;
-            border-radius: 8px; /* Rounded corners for header */
+            border-radius: 8px;
         }
 
         tbody tr {
@@ -50,83 +50,128 @@
         }
 
         tbody tr:hover {
-            background-color: #f1f1f1; /* Highlight on hover */
+            background-color: #f1f1f1;
+        }
+
+        tbody tr.highlight {
+            background-color: #ffeb3b; /* Highlight color for search results */
         }
 
         tbody tr:nth-child(even) {
-            background-color: #f9f9f9; /* Zebra stripes */
-        }
-
-        tbody tr:nth-child(odd) {
-            background-color: #ffffff;
+            background-color: #f9f9f9;
         }
 
         #inputContainer {
             margin: 20px 0;
             display: flex;
             justify-content: center;
-            gap: 10px; /* Increased gap between inputs */
+            gap: 10px;
         }
 
         input[type="text"],
-        input[type="number"] {
-            width: 150px; /* Fixed width for inputs */
+        input[type="number"],
+        input[type="search"] {
+            width: 150px;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 1rem; /* Increased font size for inputs */
+            font-size: 1rem;
             transition: border 0.3s;
         }
 
         input[type="text"]:focus,
-        input[type="number"]:focus {
-            border-color: #4caf50; /* Focus effect */
-            outline: none; /* Remove default outline */
+        input[type="number"]:focus,
+        input[type="search"]:focus {
+            border-color: #4caf50;
+            outline: none;
         }
 
         button {
             padding: 10px 15px;
             border: none;
             border-radius: 5px;
-            background-color: #4caf50; /* Button color */
+            background-color: #4caf50;
             color: white;
-            font-size: 1rem; /* Increased font size for button */
+            font-size: 1rem;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s;
         }
 
         button:hover {
-            background-color: #45a049; /* Darker shade on hover */
+            background-color: #45a049;
             transform: translateY(-2px);
+        }
+
+        .notification {
+            display: none;
+            margin: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #4caf50;
+            color: white;
+            position: relative;
+        }
+
+        .search-container {
+            margin: 20px 0;
+        }
+
+        .sorting-container {
+            margin: 20px 0;
+        }
+
+        .clear-button {
+            background-color: #f44336; /* Red color for clear button */
+        }
+
+        .clear-button:hover {
+            background-color: #d32f2f;
         }
 
         .back-button {
             display: inline-block;
             margin: 20px 0;
             padding: 10px 20px;
-            background-color: #007bff; /* Blue background */
-            color: white; /* White text */
-            text-decoration: none; /* Remove underline */
-            border-radius: 5px; /* Rounded corners */
-            font-size: 1rem; /* Font size */
-            transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s, transform 0.2s;
         }
 
         .back-button:hover {
-            background-color: #0056b3; /* Darker blue on hover */
-            transform: translateY(-2px); /* Slight lift effect */
+            background-color: #0056b3;
+            transform: translateY(-2px);
         }
 
-        .back-button:active {
-            transform: translateY(0); /* Reset lift on click */
+        @media (max-width: 600px) {
+            input[type="text"],
+            input[type="number"],
+            input[type="search"] {
+                width: 100%;
+            }
+
+            #inputContainer {
+                flex-direction: column;
+                align-items: stretch;
+            }
         }
     </style>
 </head>
 <body>
 
 <h1>Leaderboard</h1>
-<a href="javascript:history.back()" class="back-button">Back</a> <!-- Back Button -->
+<a href="javascript:history.back()" class="back-button">Back</a>
 <div class="leaderboard-container">
+    <div class="search-container">
+        <input type="search" id="searchInput" placeholder="Search by name" oninput="filterLeaderboard()">
+    </div>
+    <div class="sorting-container">
+        <button onclick="sortByPoints()">Sort by Points</button>
+        <button onclick="sortByStreak()">Sort by Streak</button>
+        <button class="clear-button" onclick="clearRecords()">Clear Records</button> <!-- Clear Records Button -->
+    </div>
     <table id="leaderboard">
         <thead>
             <tr>
@@ -149,18 +194,32 @@
     <button onclick="addScore()">Add Score</button>
 </div>
 
+<div class="notification" id="notification">Score added successfully!</div>
+
 <script>
     let leaderboardData = [];
 
+    function loadLeaderboard() {
+        const storedData = localStorage.getItem('leaderboardData');
+        if (storedData) {
+            leaderboardData = JSON.parse(storedData);
+        }
+        renderLeaderboard();
+    }
+
+    function saveLeaderboard() {
+        localStorage.setItem('leaderboardData', JSON.stringify(leaderboardData));
+    }
+
     function renderLeaderboard() {
         const leaderboardBody = document.querySelector('#leaderboard tbody');
-        leaderboardBody.innerHTML = ''; // Clear existing entries
+        leaderboardBody.innerHTML = '';
 
-        // Sort the leaderboard data based on points and streak
-        leaderboardData.sort((a, b) => b.points - a.points || b.streak - a.streak);
+        // Limit to top 10 entries
+        const limitedData = leaderboardData.slice(0, 10);
 
         // Populate the leaderboard
-        leaderboardData.forEach((entry, index) => {
+        limitedData.forEach((entry, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${index + 1}</td>
@@ -183,18 +242,73 @@
                 streak: streakInput,
                 points: pointsInput
             });
-            renderLeaderboard(); // Refresh the leaderboard
-            // Clear input fields
-            document.getElementById('nameInput').value = '';
-            document.getElementById('streakInput').value = '';
-            document.getElementById('pointsInput').value = '';
+            saveLeaderboard();
+            renderLeaderboard();
+            showNotification("Score added successfully!");
+            clearInputFields(); // Clear input fields after adding score
         } else {
             alert("Please enter valid name, streak, and points.");
         }
     }
 
-    // Initialize leaderboard on load
-    renderLeaderboard();
+    function clearInputFields() {
+        document.getElementById('nameInput').value = '';
+        document.getElementById('streakInput').value = '';
+        document.getElementById('pointsInput').value = '';
+    }
+
+    function clearRecords() {
+        if (confirm("Are you sure you want to clear all records? This action cannot be undone.")) {
+            leaderboardData = []; // Clear the leaderboard data
+            saveLeaderboard(); // Update local storage
+            renderLeaderboard(); // Refresh the leaderboard display
+            showNotification("All records have been cleared."); // Show notification
+        }
+    }
+
+    function showNotification(message) {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000); // Hide after 3 seconds
+    }
+
+    function filterLeaderboard() {
+        const searchValue = document.getElementById('searchInput').value.toLowerCase();
+        const leaderboardBody = document.querySelector('#leaderboard tbody');
+        leaderboardBody.innerHTML = '';
+
+        leaderboardData.forEach((entry, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${entry.name}</td>
+                <td>${entry.streak}</td>
+                <td>${entry.points}</td>
+            `;
+
+            // Highlight search results
+            if (entry.name.toLowerCase().includes(searchValue)) {
+                row.classList.add('highlight');
+            }
+            leaderboardBody.appendChild(row);
+        });
+    }
+
+    function sortByPoints() {
+        leaderboardData.sort((a, b) => b.points - a.points);
+        renderLeaderboard();
+    }
+
+    function sortByStreak() {
+        leaderboardData.sort((a, b) => b.streak - a.streak);
+        renderLeaderboard();
+    }
+
+    // Load the leaderboard on page load
+    window.onload = loadLeaderboard;
 </script>
 </body>
 </html>
