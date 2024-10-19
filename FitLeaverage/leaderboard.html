@@ -3,306 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fit Leverage</title>
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Leaderboard</title>
     <style>
         body {
-            background-image: url('https://example.com/background-image.jpg'); 
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: cover;
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            position: relative; 
-        }
-
-        header {
-            position: absolute; 
-            top: 0; 
-            width: 100%; 
-            color: white; 
-            padding: 10px 20px; 
-            text-align: center; 
-            font-family: 'Montserrat', sans-serif; 
-            font-size: 24px;
-            z-index: 1000; 
-        }
-
-        .container {
-            margin-top: 50px;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-            display: none; 
-        }
-
-        h2 {
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: #2C3E50;
-        }
-
-        .icon-button {
-            display: flex;
-            align-items: center;
             justify-content: center;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin: 0 10px;
-            border: none;
-            background-color: #f7f7f7;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
         }
 
-        .icon-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        .leaderboard-container {
+            width: 80%;
+            max-width: 900px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
         }
 
-        .btn-primary {
-            background-color: #3498db;
-            border: none;
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
         }
 
-        .btn-primary:hover {
-            background-color: #2980b9;
-            transform: translateY(-2px);
+        .leaderboard-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
         }
 
-        .modal-content {
-            background-color: #f7f7f7;
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            width: 200px;
         }
 
-        .modal-header {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
             background-color: #3498db;
             color: white;
+            cursor: pointer;
         }
 
-        /* Sidebar Styles */
-        .hamburger {
-            color: #ffffff;
-            position: absolute;
-            top: 20px; 
-            left: 20px; 
-            cursor: pointer; 
-            font-size: 24px; 
-            z-index: 1000; 
+        tr:hover {
+            background-color: #f1f1f1;
         }
 
-        .sidebar {
-            position: absolute; 
-            left: -250px;
-            top: 0; 
-            width: 250px; 
-            height: 100%; 
-            background-color: #3498db;
-            transition: left 0.3s; 
-            padding-top: 60px; 
-            z-index: 999; 
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
         }
 
-        .sidebar a {
-            padding: 15px;
-            text-decoration: none;
-            color: white; 
-            display: block; 
+        .rank, .username, .points {
             font-size: 18px;
-            transition: background-color 0.3s; 
-        }
-
-        .sidebar a:hover {
-            background-color: #2980b9; 
-        }
-
-        .sidebar.active {
-            left: 0; 
         }
     </style>
 </head>
-
 <body>
-    <header>
-        Fit Leverage
-        <div class="hamburger" id="toggleSidebar">
-            <i class="fas fa-bars"></i>
-        </div>
-    </header>
 
-    <div class="sidebar" id="sidebar">
-        <a href="#" id="showLeaderboard">Leaderboard</a>
-        <a href="#" id="showLoginContainer">Login</a>
-        <a href="#" id="logout">Logout</a>
-    </div>
-
-    <div class="container" id="loginContainer">
-        <h2 class="text-center">Fit Leverage 💪</h2>
-        <div class="text-center d-flex justify-content-center">
-            <a href="#" class="btn icon-button" id="googleBtn">
-                <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google Icon" style="width: 30px; height: 30px;">
-            </a>
-            <span class="or-text">Or</span>
-            <a href="#" class="btn icon-button" id="githubBtn">
-                <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub Icon" style="width: 30px; height: 30px;">
-            </a>
-        </div>
-        <hr>
-        <button type="button" class="btn btn-primary btn-block" id="showLoginPage">Login</button>
-        <div class="text-center mt-2">
-            <a href="#" id="register" data-toggle="modal" data-target="#registerModal">Don't have an account? Register</a>
-        </div>
-    </div>
-
-    <!-- New Login Page -->
-    <div class="container" id="loginPage">
-        <h2 class="login-header">Login to Fit Leverage</h2>
-        <form action="/auth/login" method="POST" id="loginForm">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Login</button>
-            <button type="button" class="btn btn-secondary btn-block" id="backToMain">Back</button>
-        </form>
-    </div>
-
-    <!-- Register Modal -->
-    <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="registerModalLabel">Register</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="/auth/register" method="POST" id="registerForm">
-                        <div class="form-group">
-                            <label for="regUsername">Username:</label>
-                            <input type="text" class="form-control" id="regUsername" name="username" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="regEmail">Email:</label>
-                            <input type="email" class="form-control" id="regEmail" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="regPassword">Password:</label>
-                            <input type="password" class="form-control" id="regPassword" name="password" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">Register</button>
-                    </form>
-                </div>
+    <div class="leaderboard-container">
+        <h1>Leaderboard</h1>
+        <div class="leaderboard-header">
+            <input type="text" id="search" placeholder="Search Username..." onkeyup="filterLeaderboard()">
+            <div>
+                <button onclick="sortTableByRank()">Sort by Rank</button>
+                <button onclick="sortTableByPoints()">Sort by Points</button>
             </div>
         </div>
-    </div>
 
-    <!-- User Profile Section -->
-    <div class="container" id="userProfile" style="display:none;">
-        <h2 class="text-center">User Profile</h2>
-        <form action="/auth/update-profile" method="POST" id="profileForm">
-            <div class="form-group">
-                <label for="profileUsername">Username:</label>
-                <input type="text" class="form-control" id="profileUsername" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="profileEmail">Email:</label>
-                <input type="email" class="form-control" id="profileEmail" name="email" required>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
-        </form>
-    </div>
-
-    <!-- Leaderboard Section -->
-    <div class="container" id="leaderboard" style="display:none;">
-        <h2 class="text-center">Leaderboard</h2>
-        <table class="table">
+        <table id="leaderboard">
             <thead>
                 <tr>
                     <th>Rank</th>
-                    <th>Name</th>
+                    <th>Avatar</th>
+                    <th>Username</th>
                     <th>Points</th>
                 </tr>
             </thead>
-            <tbody id="leaderboardBody">
-                <!-- Dynamic leaderboard entries will be added here -->
+            <tbody>
+                <!-- Add leaderboard data here -->
+                <tr>
+                    <td class="rank">1</td>
+                    <td><img src="useravatar1.png" alt="User 1" class="avatar"></td>
+                    <td class="username">User1</td>
+                    <td class="points">5000</td>
+                </tr>
+                <tr>
+                    <td class="rank">2</td>
+                    <td><img src="useravatar2.png" alt="User 2" class="avatar"></td>
+                    <td class="username">User2</td>
+                    <td class="points">4200</td>
+                </tr>
+                <tr>
+                    <td class="rank">3</td>
+                    <td><img src="useravatar3.png" alt="User 3" class="avatar"></td>
+                    <td class="username">User3</td>
+                    <td class="points">4100</td>
+                </tr>
+                <!-- You can add more rows as needed -->
             </tbody>
         </table>
     </div>
 
-    <!-- jQuery and Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
     <script>
-        $(document).ready(function () {
-            // Show login container
-            $('#showLoginContainer').click(function () {
-                $('#loginContainer').fadeIn();
-                $('#leaderboard').hide();
-                $('#userProfile').hide();
-                $('#loginPage').hide(); // Hide login page
-                $('#loginContainer').show(); // Show login container
+        // Sorting by rank
+        function sortTableByRank() {
+            let table = document.getElementById("leaderboard").getElementsByTagName("tbody")[0];
+            let rows = Array.from(table.rows);
+
+            rows.sort((a, b) => {
+                return parseInt(a.getElementsByClassName("rank")[0].innerText) - parseInt(b.getElementsByClassName("rank")[0].innerText);
             });
 
-            // Show leaderboard
-            $('#showLeaderboard').click(function () {
-                $('#leaderboard').fadeIn();
-                $('#loginContainer').hide();
-                $('#userProfile').hide();
-                $('#loginPage').hide(); // Hide login page
-                $('#leaderboard').show(); // Show leaderboard
-                populateLeaderboard(); // Function to populate leaderboard
+            rows.forEach(row => table.appendChild(row)); // Reorder rows
+        }
+
+        // Sorting by points
+        function sortTableByPoints() {
+            let table = document.getElementById("leaderboard").getElementsByTagName("tbody")[0];
+            let rows = Array.from(table.rows);
+
+            rows.sort((a, b) => {
+                return parseInt(b.getElementsByClassName("points")[0].innerText) - parseInt(a.getElementsByClassName("points")[0].innerText);
             });
 
-            // Function to populate leaderboard (dummy data)
-            function populateLeaderboard() {
-                const leaderboardData = [
-                    { rank: 1, name: 'Alice', points: 100 },
-                    { rank: 2, name: 'Bob', points: 90 },
-                    { rank: 3, name: 'Charlie', points: 80 },
-                ];
-                $('#leaderboardBody').empty(); // Clear previous entries
-                leaderboardData.forEach(entry => {
-                    $('#leaderboardBody').append(`
-                        <tr>
-                            <td>${entry.rank}</td>
-                            <td>${entry.name}</td>
-                            <td>${entry.points}</td>
-                        </tr>
-                    `);
-                });
+            rows.forEach(row => table.appendChild(row)); // Reorder rows
+        }
+
+        // Search functionality to filter leaderboard by username
+        function filterLeaderboard() {
+            let input = document.getElementById('search').value.toUpperCase();
+            let table = document.getElementById("leaderboard").getElementsByTagName("tbody")[0];
+            let rows = table.getElementsByTagName("tr");
+
+            for (let i = 0; i < rows.length; i++) {
+                let username = rows[i].getElementsByClassName("username")[0].innerText;
+                if (username.toUpperCase().indexOf(input) > -1) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
             }
-
-            // Show login page
-            $('#showLoginPage').click(function () {
-                $('#loginPage').fadeIn();
-                $('#loginContainer').hide(); // Hide login container
-            });
-
-            // Back to main from login page
-            $('#backToMain').click(function () {
-                $('#loginContainer').fadeIn(); // Show login container
-                $('#loginPage').hide(); // Hide login page
-            });
-
-            // Toggle sidebar visibility
-            $('#toggleSidebar').click(function () {
-                $('#sidebar').toggleClass('active');
-            });
-        });
+        }
     </script>
+
 </body>
 </html>
