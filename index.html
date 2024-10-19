@@ -131,7 +131,7 @@
     <!-- New Login Page -->
     <div id="loginPage" class="container">
         <h2 class="login-header">Login to Fit Leverage</h2>
-        <form action="/auth/login" method="POST" id="loginForm">
+        <form id="loginForm">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" class="form-control" id="email" name="email" required>
@@ -156,7 +156,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="/auth/register" method="POST" id="registerForm">
+                    <form id="registerForm">
                         <div class="form-group">
                             <label for="regUsername">Username:</label>
                             <input type="text" class="form-control" id="regUsername" name="username" required>
@@ -179,7 +179,7 @@
     <!-- User Profile Section -->
     <div class="container" id="userProfile">
         <h2 class="text-center">User Profile</h2>
-        <form action="/auth/update-profile" method="POST" id="profileForm">
+        <form id="profileForm">
             <div class="form-group">
                 <label for="profileUsername">Username:</label>
                 <input type="text" class="form-control" id="profileUsername" name="username" required>
@@ -219,40 +219,83 @@
             window.location.href = url;
         };
 
-        // Show the login page
+        // Show Login Page
         document.getElementById('showLoginPage').onclick = function () {
             document.getElementById('loginContainer').style.display = 'none';
             document.getElementById('loginPage').style.display = 'block';
         };
 
-        // Back to main container
+        // Back to Main Button
         document.getElementById('backToMain').onclick = function () {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('loginContainer').style.display = 'block';
         };
 
-        // Handle successful login and redirect to index2.html
-        document.getElementById('loginForm').onsubmit = function (event) {
-            event.preventDefault();
-            // Simulated login logic
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+        // Register Form Submission
+        document.getElementById('registerForm').onsubmit = async function (e) {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
 
-            // Replace with your actual login logic
-            if (emailPattern.test(email) && password) {
-                alert('Login successful');
-                window.location.href = 'index2.html'; // Redirect to index2.html on successful login
-            } else {
-                alert('Invalid email or password');
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const result = await response.json();
+                alert(result.msg);
+                if (response.ok) {
+                    $('#registerModal').modal('hide'); // Hide modal on success
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
             }
         };
 
-        // Handle logout functionality
-        document.getElementById('logoutBtn').onclick = function () {
-            alert('Logged out successfully');
-            document.getElementById('userProfile').style.display = 'none';
-            document.getElementById('loginContainer').style.display = 'block';
-        };
+        // Login Form Submission
+document.getElementById('loginForm').onsubmit = async function (e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        const response = await fetch('/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            // Successful login
+            alert(result.token); // or handle the token accordingly
+            window.location.href = 'index2.html'; // Redirect to index2.html
+        } else {
+            // Handle errors returned from the server
+            alert(result.msg);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while logging in. Please try again.');
+    }
+};
+
+
+        // Logout functionality
+document.getElementById('logoutBtn').onclick = async function () {
+    await fetch('/auth/logout', { method: 'POST' });
+
+    localStorage.removeItem('token');
+    window.location.href = 'index.html'; // Adjust this if your login page is named differently
+};
     </script>
 </body>
 
