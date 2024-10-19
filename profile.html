@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Profile Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #ffd000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .profile-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 20px;
+            border: 3px solid #3498db;
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            margin: 15px 0 10px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .profile-info {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .profile-info strong {
+            display: block;
+            font-weight: 700;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            margin: 0 10px;
+        }
+
+        .social-icons img {
+            width: 30px;
+            height: 30px;
+            transition: transform 0.2s;
+        }
+
+        .social-icons img:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-container">
+        <div class="profile-pic">
+            <img src="pp.webp" alt="Profile Picture" onerror="this.onerror=null; this.src='default-avatar.png';">
+        </div>
+        <h2 id="display-name">DevSmiths</h2>
+        <div class="profile-info"><strong>Location:</strong> <span id="display-location">Uttar Pradesh</span></div>
+        <div class="profile-info"><strong>Activities:</strong> <span id="display-activities">Running, Cycling, Walking, Calisthenics</span></div>
+
+        <div class="social-icons">
+            <a href="https://telegram.org" target="_blank">
+                <img src="telegram.png" alt="Telegram Logo">
+            </a>
+            <a href="https://www.instagram.com" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram Logo">
+            </a>
+            <a href="https://twitter.com" target="_blank">
+                <img src="twitter.png" alt="Twitter Logo">
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>

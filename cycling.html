@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cycling Activity</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+            background-image: url("Cycling.jpg");
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+            text-align: center;
+            font-family: 'Verdana', sans-serif;
+        }
+
+        .activity-section, .video-section {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-section h2, .video-section h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .activity-section input, select {
+            width: calc(50% - 10px);
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .activity-section button {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #4c89af;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+            width: auto;
+        }
+
+        .activity-section button:hover {
+            background-color: #4c89af;
+        }
+
+        .chart-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        canvas {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .calorie-result {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .video-thumbnail {
+            display: inline-block;
+            width: 32%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            text-decoration: none;
+        }
+
+        .back-link button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .back-link button:hover {
+            background-color: #555;
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+
+        .dark-mode .activity-section, .dark-mode .video-section {
+            background-color: #333;
+            color: white;
+        }
+
+        .dark-mode .dark-mode-toggle {
+            background-color: #fff;
+            color: #333;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+
+    <div class="container">
+        <h1>Cycling Activity</h1>
+
+        <!-- Cycling Activity Section -->
+        <div class="activity-section">
+            <h2>Log Your Cycling Activity</h2>
+            <input type="number" id="cycling-distance" placeholder="Distance (km)">
+            <input type="number" id="cycling-time" placeholder="Time (min)">
+            <button onclick="logCyclingActivity()">Log Cycling Activity</button>
+        </div>
+
+        <!-- Calorie Counter Section -->
+        <div class="activity-section">
+            <h2>Calculate Calories Burned</h2>
+            <select id="cycling-intensity">
+                <option value="fast">Fast-paced</option>
+                <option value="moderate">Moderate-paced</option>
+            </select>
+            <button onclick="calculateCalories()">Calculate Calories</button>
+            <div class="calorie-result" id="calorie-result"></div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-container" id="chart-container">
+            <canvas id="activityChart"></canvas>
+        </div>
+
+        <!-- YouTube Links Section -->
+        <div class="video-section">
+            <h2>Helpful Cycling Workout Videos</h2>
+            <div class="video-thumbnail">
+                <a href="https://youtu.be/4ssLDk1eX9w?feature=shared" target="_blank">
+                    <img src="cycle1.png" alt="Beginner Cycling Workout"> <!-- Replace with actual thumbnail -->
+                </a>
+                <div>Beginner Cycling Workout</div>
+            </div>
+            <div class="video-thumbnail">
+                <a href="https://youtu.be/x4WHeVf5DN4?feature=shared" target="_blank">
+                    <img src="cycle2.png" alt="Intermediate Cycling Workout"> <!-- Replace with actual thumbnail -->
+                </a>
+                <div>Intermediate Cycling Workout</div>
+            </div>
+            <div class="video-thumbnail">
+                <a href="https://youtu.be/bjlKdrfUu1o?feature=shared" target="_blank">
+                    <img src="cycle3.png" alt="Advanced Cycling Workout"> <!-- Replace with actual thumbnail -->
+                </a>
+                <div>Advanced Cycling Workout</div>
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a href="index2.html">
+                <button>Back to Home</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let darkMode = false;
+        let chartInstance = null;
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            document.body.classList.toggle("dark-mode", darkMode);
+        }
+
+        let cyclingData = JSON.parse(localStorage.getItem('cyclingData')) || [];
+
+        function logCyclingActivity() {
+            const distance = parseFloat(document.getElementById('cycling-distance').value);
+            const time = parseFloat(document.getElementById('cycling-time').value);
+            const date = new Date().toLocaleDateString();
+
+            if (isNaN(distance) || isNaN(time)) {
+                alert("Please enter valid numbers for both distance and time!");
+                return;
+            }
+
+            cyclingData.push({ date, distance, time });
+            localStorage.setItem("cyclingData", JSON.stringify(cyclingData));
+
+            alert(`Cycling Activity Logged!\nDistance: ${distance} km\nTime: ${time} min`);
+
+            // Show chart and update it after logging activity
+            document.getElementById('chart-container').style.display = 'block';
+            renderChart();
+        }
+
+        // Calorie Calculation
+        function calculateCalories() {
+            const time = parseFloat(document.getElementById("cycling-time").value);
+            const intensity = document.getElementById("cycling-intensity").value;
+
+            if (isNaN(time)) {
+                alert("Please enter valid time for cycling!");
+                return;
+            }
+
+            let caloriesBurned;
+            if (intensity === "fast") {
+                caloriesBurned = (590 + 740) / 2 * (time / 60); // Average of 590-740 calories per hour
+            } else {
+                caloriesBurned = (413 + 620) / 2 * (time / 60); // Average of 413-620 calories per hour
+            }
+
+            document.getElementById("calorie-result").textContent = `You burned approximately ${caloriesBurned.toFixed(2)} calories.`;
+        }
+
+        // Render the bar chart with data from localStorage
+        function renderChart() {
+            const labels = cyclingData.map(data => data.date);
+            const distances = cyclingData.map(data => data.distance);
+            const times = cyclingData.map(data => data.time);
+
+            const ctx = document.getElementById('activityChart').getContext('2d');
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Distance (km)',
+                            data: distances,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Time (min)',
+                            data: times,
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // On page load, check if there's existing data and show the chart if present
+        window.onload = () => {
+            if (cyclingData.length > 0) {
+                document.getElementById('chart-container').style.display = 'block';
+                renderChart();
+            }
+        };
+    </script>
+</body>
+
+</html>

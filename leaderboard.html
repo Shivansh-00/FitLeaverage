@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9; /* Light background color */
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #4a4a4a;
+            font-size: 2.5rem; /* Increased font size */
+        }
+
+        .leaderboard-container {
+            background: #ffffff; /* White background for the leaderboard */
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 800px; /* Limit width */
+            margin: auto; /* Center the leaderboard */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4caf50; /* Header color */
+            color: white;
+            border-radius: 8px; /* Rounded corners for header */
+        }
+
+        tbody tr {
+            transition: background-color 0.3s;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1; /* Highlight on hover */
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9; /* Zebra stripes */
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        #inputContainer {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Increased gap between inputs */
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 150px; /* Fixed width for inputs */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem; /* Increased font size for inputs */
+            transition: border 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: #4caf50; /* Focus effect */
+            outline: none; /* Remove default outline */
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4caf50; /* Button color */
+            color: white;
+            font-size: 1rem; /* Increased font size for button */
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049; /* Darker shade on hover */
+            transform: translateY(-2px);
+        }
+
+        .back-button {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #007bff; /* Blue background */
+            color: white; /* White text */
+            text-decoration: none; /* Remove underline */
+            border-radius: 5px; /* Rounded corners */
+            font-size: 1rem; /* Font size */
+            transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+        }
+
+        .back-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            transform: translateY(-2px); /* Slight lift effect */
+        }
+
+        .back-button:active {
+            transform: translateY(0); /* Reset lift on click */
+        }
+    </style>
+</head>
+<body>
+
+<h1>Leaderboard</h1>
+<a href="javascript:history.back()" class="back-button">Back</a> <!-- Back Button -->
+<div class="leaderboard-container">
+    <table id="leaderboard">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Streak</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Leaderboard entries will be populated here -->
+        </tbody>
+    </table>
+</div>
+
+<div id="inputContainer">
+    <input type="text" id="nameInput" placeholder="Enter your name" required>
+    <input type="number" id="streakInput" min="0" placeholder="Streak" required>
+    <input type="number" id="pointsInput" min="0" placeholder="Points" required>
+    <button onclick="addScore()">Add Score</button>
+</div>
+
+<script>
+    let leaderboardData = [];
+
+    function renderLeaderboard() {
+        const leaderboardBody = document.querySelector('#leaderboard tbody');
+        leaderboardBody.innerHTML = ''; // Clear existing entries
+
+        // Sort the leaderboard data based on points and streak
+        leaderboardData.sort((a, b) => b.points - a.points || b.streak - a.streak);
+
+        // Populate the leaderboard
+        leaderboardData.forEach((entry, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${entry.name}</td>
+                <td>${entry.streak}</td>
+                <td>${entry.points}</td>
+            `;
+            leaderboardBody.appendChild(row);
+        });
+    }
+
+    function addScore() {
+        const nameInput = document.getElementById('nameInput').value.trim();
+        const streakInput = parseInt(document.getElementById('streakInput').value);
+        const pointsInput = parseInt(document.getElementById('pointsInput').value);
+
+        if (nameInput && streakInput >= 0 && pointsInput >= 0) {
+            leaderboardData.push({
+                name: nameInput,
+                streak: streakInput,
+                points: pointsInput
+            });
+            renderLeaderboard(); // Refresh the leaderboard
+            // Clear input fields
+            document.getElementById('nameInput').value = '';
+            document.getElementById('streakInput').value = '';
+            document.getElementById('pointsInput').value = '';
+        } else {
+            alert("Please enter valid name, streak, and points.");
+        }
+    }
+
+    // Initialize leaderboard on load
+    renderLeaderboard();
+</script>
+</body>
+</html>

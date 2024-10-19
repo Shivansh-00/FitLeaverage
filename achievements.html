@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Falling Achievement Badges</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%);
+            overflow: hidden; /* Prevents scrollbars from appearing */
+            position: relative;
+            height: 100vh;
+            margin: 0;
+            animation: backgroundAnimation 10s linear infinite; /* Background animation */
+        }
+
+        @keyframes backgroundAnimation {
+            0% { background-color: #cfd9df; }
+            50% { background-color: #e2ebf0; }
+            100% { background-color: #cfd9df; }
+        }
+
+        h1 {
+            color: #333;
+            margin: 20px;
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .falling-badge {
+            position: absolute;
+            font-size: 3em; /* Size of the trophy icon */
+            opacity: 0.8;
+            animation: fall linear forwards; /* Animation to fall down */
+            cursor: pointer; /* Show pointer on hover */
+        }
+
+        /* Animation for the falling badges */
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg); /* Start position */
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg); /* Move down and rotate */
+                opacity: 0;
+            }
+        }
+
+        /* Background stars */
+        .star {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: twinkle 1.5s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Achievements</h1>
+<div class="falling-badges"></div>
+
+<audio id="fallSound" src="" preload="auto"></audio>
+
+<script>
+    const badges = [
+        { icon: 'fas fa-trophy', color: '#FFD700', sound: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
+        { icon: 'fas fa-medal', color: '#C0C0C0', sound: 'https://www.soundjay.com/button/sounds/button-4.mp3' },
+        { icon: 'fas fa-trophy', color: '#CD7F32', sound: 'https://www.soundjay.com/button/sounds/button-5.mp3' },
+        { icon: 'fas fa-star', color: '#4CAF50', sound: 'https://www.soundjay.com/button/sounds/button-6.mp3' }
+    ];
+
+    function createFallingBadge() {
+        const badgeInfo = badges[Math.floor(Math.random() * badges.length)];
+        const badge = document.createElement('div');
+        badge.classList.add('falling-badge');
+        badge.innerHTML = `<i class="${badgeInfo.icon}" style="color: ${badgeInfo.color};"></i>`;
+
+        // Randomize the horizontal position of the badge
+        badge.style.left = Math.random() * (window.innerWidth - 100) + 'px'; // Adjust for width of icons
+
+        // Randomize the animation duration and delay
+        const duration = Math.random() * 3 + 2; // Between 2 to 5 seconds
+        badge.style.animationDuration = duration + 's';
+        badge.style.animationDelay = Math.random() * 2 + 's'; // Random delay
+
+        // Play sound effect
+        const fallSound = document.getElementById('fallSound');
+        fallSound.src = badgeInfo.sound; // Set sound source based on badge
+        fallSound.currentTime = 0; // Reset sound to start
+        fallSound.play();
+
+        // Add click event to collect badge
+        badge.addEventListener('click', () => {
+            alert(`You collected a badge!`);
+            badge.remove();
+        });
+
+        document.body.appendChild(badge);
+
+        // Remove the badge after animation completes
+        badge.addEventListener('animationend', () => {
+            badge.remove();
+        });
+    }
+
+    // Generate badges at intervals
+    setInterval(createFallingBadge, 700); // Adjust the interval to change frequency
+
+    // Add background stars
+    function createStars() {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        const size = Math.random() * 5 + 2; // Random size for stars
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.top = Math.random() * 100 + 'vh';
+        star.style.left = Math.random() * 100 + 'vw';
+
+        document.body.appendChild(star);
+
+        // Remove star after a certain time
+        setTimeout(() => {
+            star.remove();
+        }, 3000);
+    }
+
+    // Generate stars at intervals
+    setInterval(createStars, 1000); // Adjust frequency of stars
+</script>
+
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities Grid</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url("bg.webp");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            font-family: 'Roboto', sans-serif;
+            position: relative;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        header {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            color: rgb(255, 255, 255);
+            padding: 10px 20px;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            z-index: 1000;
+        }
+
+        .hamburger {
+            color: #ffffff;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            font-size: 30px;
+            z-index: 1000;
+        }
+
+        .sidebar {
+            position: absolute;
+            left: -250px;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #3498db;
+            transition: left 0.3s;
+            padding-top: 60px;
+            z-index: 999;
+        }
+
+        .sidebar a {
+            padding: 15px;
+            text-decoration: none;
+            color: white;
+            display: block;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #2980b9;
+        }
+
+        .profile-section {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .profile-section:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-pic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #3498db;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
+            padding: 20px;
+            width: 90vw;
+            max-width: 1200px;
+            margin-top: 100px;
+        }
+
+        .box {
+            position: relative;
+            background-color: #ffffff;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            height: 300px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .box h2 {
+            position: absolute;
+            bottom: -50px; /* Start below the image */
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: bottom 0.5s ease, opacity 0.5s ease;
+        }
+
+        .box:hover h2 {
+            bottom: 20px; 
+            opacity: 1;
+        }
+
+        /* Responsive Layout */
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .profile-pic {
+                width: 70px;
+                height: 70px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            header {
+                font-size: 40px;
+            }
+            .profile-pic {
+                width: 80px;
+                height: 80px;
+            }
+            .box {
+                height: 357px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        FIT LEAVERAGE
+    </header>
+
+    <div class="hamburger" onclick="toggleSidebar()">&#9776;</div>
+
+    <div class="sidebar" id="sidebar">
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="calendar.html">Calendar Streak</a>
+        <a href="achievements.html">Achievements</a>
+        <a href="store.html">Store</a>
+        <a href="contact.html">Contact Us</a>
+    </div>
+
+    <a href="profile.html" class="profile-section">
+        <div class="profile-pic">
+            <img src="pp.webp" alt="Profile Picture">
+        </div>
+    </a>
+
+    <div id="main" class="container">
+        <div class="box" onclick="redirectToPage('running.html')">
+            <img src="Running.png" alt="Running">
+            <h2>Running</h2>
+        </div>
+        <div class="box" onclick="redirectToPage('swimming.html')">
+            <img src="Swimming.jpg" alt="Swimming">
+            <h2>Swimming</h2>
+        </div>
+        <div class="box" onclick="redirectToPage('gym.html')">
+            <img src="gym.jpg" alt="Gym">
+            <h2>Gym</h2>
+        </div>
+        <div class="box" onclick="redirectToPage('cycling.html')">
+            <img src="Cycling.jpg" alt="Cycling">
+            <h2>Cycling</h2>
+        </div>
+        <div class="box" onclick="redirectToPage('calisthenics.html')">
+            <img src="Calisthenics.jpg" alt="Calisthenics">
+            <h2>Calisthenics</h2>
+        </div>
+        <div class="box" onclick="redirectToPage('hiking.html')">
+            <img src="hiking.jpg" alt="Hiking">
+            <h2>Hiking</h2>
+        </div>
+        <div class="box" onclick="redirectToPage('yoga.html')">
+            <img src="Yoga.jpg" alt="Yoga">
+            <h2>Yoga</h2>
+        </div>
+        <div class="box" onclick="redirectToPage('rockclimbing.html')">
+            <img src="rockclimbing.jpg" alt="Rock Climbing">
+            <h2>Rock Climbing</h2>
+        </div>
+        <div class="box" onclick="redirectToPage('walking.html')">
+            <img src="Walking.jpg" alt="Walking">
+            <h2>Walking</h2>
+        </div>
+
+        <script>
+            function toggleSidebar() {
+                const sidebar = document.getElementById("sidebar");
+                sidebar.style.left = sidebar.style.left === "0px" ? "-250px" : "0px";
+            }
+    
+            function redirectToPage(page) {
+                window.location.href = page;
+            }
+        </script>
+    </body>
+</html>

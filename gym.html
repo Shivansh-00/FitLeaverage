@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Activity with Calorie Calculator</title>
+    <style>
+        body {
+            background-image: url("gym.jpg");
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .main-content {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .activity-section {
+            margin: 20px 0;
+        }
+
+        .chart-container {
+            margin: 20px 0;
+            width: 100%;
+            max-width: 600px;
+            display: none;
+        }
+
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+
+        .dark-mode .dark-mode-toggle {
+            background-color: #fff;
+            color: #333;
+        }
+
+        canvas {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        input[type="number"] {
+            width: calc(100% - 24px);
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #2980b9;
+            outline: none;
+        }
+
+        .video-section {
+            margin: 30px 0;
+        }
+
+        .video-thumbnail {
+            display: inline-block;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .video-thumbnail img {
+            width: 150px;
+            height: 100px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .calorie-calculator {
+            margin: 30px 0;
+        }
+
+        .back-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let darkMode = false;
+        let chartInstance = null;
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            document.body.classList.toggle("dark-mode", darkMode);
+        }
+
+        // Log Gym Activity and store it
+        function logGymActivity() {
+            const time = parseFloat(document.getElementById("gym-time").value);
+            const date = new Date().toLocaleDateString();
+
+            if (isNaN(time)) {
+                alert("Please enter a valid number for workout time!");
+                return;
+            }
+
+            const gymData = JSON.parse(localStorage.getItem("gymData")) || [];
+            gymData.push({ date, time });
+            localStorage.setItem("gymData", JSON.stringify(gymData));
+
+            alert(`Gym Activity Logged!\nTime: ${time} min`);
+
+            // Show chart and update it after logging activity
+            document.getElementById('chart-container').style.display = 'block';
+            renderChart();
+        }
+
+        // Render the bar chart with data from localStorage
+        function renderChart() {
+            const gymData = JSON.parse(localStorage.getItem("gymData")) || [];
+
+            // Prepare data for the chart
+            const labels = gymData.map(data => data.date);
+            const times = gymData.map(data => data.time);
+
+            const ctx = document.getElementById('activityChart').getContext('2d');
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Workout Time (min)',
+                            data: times,
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Calorie calculator function
+        function calculateCalories() {
+            const weight = parseFloat(document.getElementById("weight").value);
+            const time = parseFloat(document.getElementById("time").value);
+            const intensity = document.getElementById("intensity").value;
+
+            if (isNaN(weight) || isNaN(time)) {
+                alert("Please enter valid values for weight and time.");
+                return;
+            }
+
+            let caloriesPerMinute;
+            if (intensity === "low") {
+                caloriesPerMinute = 3.5; 
+            } else if (intensity === "moderate") {
+                caloriesPerMinute = 7.0; 
+            } else if (intensity === "high") {
+                caloriesPerMinute = 10.0;
+            }
+
+            const totalCalories = weight * caloriesPerMinute * time / 60;
+            document.getElementById("calories-result").textContent = `Estimated Calories Burned: ${totalCalories.toFixed(2)} kcal`;
+        }
+
+        window.onload = () => {
+            const gymData = JSON.parse(localStorage.getItem("gymData")) || [];
+            if (gymData.length > 0) {
+                document.getElementById('chart-container').style.display = 'block';
+                renderChart();
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <div class="main-content">
+        <div class="header">
+            <h1>Gym Activity & Calorie Calculator</h1>
+        </div>
+
+        <!-- Gym Activity Section -->
+        <section class="activity-section">
+            <h2>Log Your Gym Workout</h2>
+            <input type="number" id="gym-time" placeholder="Workout Time (min)">
+            <button onclick="logGymActivity()">Log Gym Activity</button>
+        </section>
+
+        <!-- Chart Section -->
+        <div class="chart-container" id="chart-container">
+            <canvas id="activityChart"></canvas>
+        </div>
+
+        <!-- Calorie Calculator Section -->
+        <section class="calorie-calculator">
+            <h2>Calorie Calculator</h2>
+            <input type="number" id="weight" placeholder="Your Weight (kg)">
+            <input type="number" id="time" placeholder="Workout Time (min)">
+            <select id="intensity">
+                <option value="low">Low Intensity</option>
+                <option value="moderate">Moderate Intensity</option>
+                <option value="high">High Intensity</option>
+            </select>
+            <button onclick="calculateCalories()">Calculate Calories</button>
+            <p id="calories-result"></p>
+        </section>
+
+        <!-- YouTube Links Section -->
+        <section class="video-section">
+            <h2>Helpful Gym Workout Videos</h2>
+            <div class="video-thumbnail">
+                <a href="https://youtu.be/EKUNGQ4LmH8?feature=shared" target="_blank">
+                    <img src="ytgym.png" alt="Beginner Gym Workout"> <!-- Replace with actual thumbnail -->
+                </a>
+                <div>Beginner Gym Workout</div>
+            </div>
+            <div class="video-thumbnail">
+                <a href="https://youtu.be/eMjyvIQbn9M?feature=shared" target="_blank">
+                    <img src="ytgym2.png" alt="Intermediate Gym Workout"> <!-- Replace with actual thumbnail -->
+                </a>
+                <div>Intermediate Gym Workout</div>
+            </div>
+            <div class="video-thumbnail">
+                <a href="https://youtu.be/S9K96S1Sliw?feature=shared" target="_blank">
+                    <img src="ytgym3.png" alt="Advanced Gym Workout"> <!-- Replace with actual thumbnail -->
+                </a>
+                <div>Advanced Gym Workout</div>
+            </div>
+        </section>
+
+        <div class="back-link">
+            <a href="index2.html">
+                <button style="width: auto;">Back to Home</button>
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>
