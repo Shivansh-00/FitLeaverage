@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #ffd000;
+            background: linear-gradient(135deg, #ffd000, #ff6f00);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -23,7 +23,7 @@
             background-color: #ffffff;
             border-radius: 12px;
             padding: 30px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
             width: 90%;
             max-width: 400px;
             text-align: center;
@@ -36,7 +36,12 @@
             border-radius: 50%;
             overflow: hidden;
             margin: 0 auto 20px;
-            border: 3px solid #3498db;
+            border: 5px solid #3498db;
+            transition: transform 0.3s; /* Adding transition for hover effect */
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.05); /* Slightly enlarge on hover */
         }
 
         .profile-pic img {
@@ -55,11 +60,13 @@
         .profile-info {
             margin: 10px 0;
             font-size: 16px;
+            color: #555; /* A softer color for better readability */
         }
 
         .profile-info strong {
             display: block;
             font-weight: 700;
+            color: #3498db; /* Different color for strong text */
         }
 
         .social-icons {
@@ -73,13 +80,25 @@
         }
 
         .social-icons img {
-            width: 30px;
-            height: 30px;
-            transition: transform 0.2s;
+            width: 35px; /* Slightly larger icons */
+            height: 35px;
+            transition: transform 0.3s, filter 0.3s;
+            border-radius: 8px; /* Added border radius */
         }
 
         .social-icons img:hover {
-            transform: scale(1.1);
+            transform: scale(1.2); /* Increase icon size on hover */
+            filter: brightness(0.8); /* Slightly darken on hover */
+        }
+
+        @media (max-width: 400px) {
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .profile-info {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
